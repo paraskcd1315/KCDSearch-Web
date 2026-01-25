@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+:host {
+  @apply max-w-screen-xl lg:mx-auto lg:px-20 px-8 py-8;
+}
+
+.result-card {
+  background-color: var(--mat-sys-surface-container-high);
+}

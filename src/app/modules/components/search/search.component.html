@@ -10,7 +10,12 @@
     class="search-input"
     [placeholder]="placeholder()"
   />
-  <mat-icon matPrefix>search</mat-icon>
+  <mat-icon matPrefix [svgIcon]="'heroicons_outline:magnifying-glass'" />
+  @if ((searchControl.value?.trim()?.length ?? 0) > 0 && !isLoadingAutocomplete()) {
+    <button matButton="icon" matSuffix (click)="clearSearch()">
+      <mat-icon [svgIcon]="'heroicons_outline:x-mark'" />
+    </button>
+  }
   @if (isLoadingAutocomplete()) {
     <mat-progress-spinner matSuffix mode="indeterminate" diameter="20"></mat-progress-spinner>
   }
@@ -22,8 +27,8 @@
     (closed)="onAutocompleteClosed()"
   >
     @for (suggestion of suggestions(); track suggestion) {
-      <mat-option [value]="suggestion">
-        <mat-icon>search</mat-icon>{{ suggestion }}
+      <mat-option [value]="suggestion" (click)="onSuggestionClick(suggestion)">
+        <mat-icon [svgIcon]="'heroicons_outline:magnifying-glass'" />{{ suggestion }}
       </mat-option>
     }
   </mat-autocomplete>

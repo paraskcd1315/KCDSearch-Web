@@ -59,7 +59,7 @@ export class SearchComponent {
         filter((value) => value !== null && value.trim().length >= 2),
         switchMap(async (value) => {
           this.isLoadingAutocomplete.set(true);
-          const results = await this.searchService.autocomplete(value || '');
+          const results = await this.searchService.autocomplete(value ?? '');
           this.isLoadingAutocomplete.set(false);
           return results;
         })
@@ -70,8 +70,20 @@ export class SearchComponent {
       });
 
     this.searchControl.valueChanges.subscribe((value) => {
-      this.valueChange.emit(value || '');
+      this.valueChange.emit(value ?? '');
     });
+  }
+
+  clearSearch(): void {
+    this.searchControl.setValue('');
+    this.suggestions.set([]);
+    this.isAutocompleteOpen.set(false);
+    this.searchService.clear();
+  }
+
+  onSuggestionClick(suggestion: string): void {
+    this.searchControl.setValue(suggestion, { emitEvent: false });
+    this.onSearch();
   }
 
   onSearch(): void {
@@ -95,6 +107,6 @@ export class SearchComponent {
   }
 
   displayFn(value: string): string {
-    return value || '';
+    return value ?? '';
   }
 }

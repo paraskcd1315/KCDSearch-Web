@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+::ng-deep .mat-mdc-tab-labels {
+  @apply max-w-screen-xl lg:mx-auto lg:px-16;
+}
+
+.container {
+  background-color: var(--mat-sys-surface-container);
+}

@@ -1,1 +1,35 @@
-<p>search.page works!</p>
+<div class="flex flex-col gap-0">
+  <div class="flex sm:flex-row flex-col items-center gap-8 animate-fade-in-up md:px-10 sm:px-8 px-4 pt-4">
+    <a [routerLink]="['/']">
+      <img src="assets/images/KCDSearchLogo.png" alt="KCD Search" class="w-36">
+    </a>
+    <app-search class="w-full sm:mt-4" [initialValue]="query()" (search)="onSearch($event)" />
+  </div>
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" [selectedIndex]="activeTab()" (selectedTabChange)="onTabChange($event)">
+    @for (tab of tabs; track tab.value) {
+      <mat-tab>
+        <ng-template matTabLabel>
+          <div class="flex items-center gap-2 animate-fade-in-up delay-1">
+            <mat-icon [svgIcon]="tab.icon"></mat-icon>
+            <span class="text-sm font-medium">{{ tab.label }}</span>
+          </div>
+        </ng-template>
+        <div class="flex flex-col gap-4 container" [class.h-dvh]="isLoading()">
+          @if (isLoading()) {
+            <mat-progress-bar mode="indeterminate" class="mx-auto"></mat-progress-bar>
+          }
+          @else {
+            @switch (tab.value) {
+              @case (SearchCategory.AI) {
+                <app-ai-tab class="animate-fade-in-up delay-1"></app-ai-tab>
+              }
+              @case (SearchCategory.General) {
+                <app-general-tab class="animate-fade-in-up delay-1"></app-general-tab>
+              }
+            }
+          }
+        </div>
+      </mat-tab>
+    }
+  </mat-tab-group>
+</div>

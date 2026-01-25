@@ -1,17 +1,17 @@
-<div class="flex flex-col items-center md:pt-32 pt-16 gap-8 h-screen">
-  <img src="assets/images/KCDSearchLogo.png" alt="KCD Search" class="lg:w-1/4 md:w-1/3 sm:w-1/2 w-2/3">
-  <div class="w-full max-w-2xl px-4">
+<div class="flex flex-col items-center md:pt-32 pt-16 gap-8 h-dvh">
+  <img src="assets/images/KCDSearchLogo.png" alt="KCD Search" class="lg:w-1/4 md:w-1/3 sm:w-1/2 w-2/3 animate-fade-in-up">
+  <div class="w-full max-w-2xl px-4 animate-fade-in-up delay-1">
     <app-search
       (search)="onSearch($event)"
       placeholder="Search the web..."
     />
     <div class="flex justify-center gap-4 mt-4">
       <button matButton="filled" color="primary" type="submit" class="md:w-1/4 sm:w-1/3 w-full">
-        <mat-icon>search</mat-icon>
+        <mat-icon [svgIcon]="'heroicons_outline:magnifying-glass'" />
         Search
       </button>
       <button matButton="filled" color="primary" type="button" class="md:w-1/4 sm:w-1/3 w-full">
-        <mat-icon>smart_toy</mat-icon>
+        <mat-icon [svgIcon]="'heroicons_outline:sparkles'" />
         AI Mode
       </button>
     </div>
