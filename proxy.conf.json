@@ -1,0 +1,20 @@
+{
+    "/api/search": {
+      "target": "http://localhost:8080",
+      "secure": true,
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/api/search": "/search"
+      },
+      "logLevel": "debug"
+    },
+    "/api/autocomplete": {
+      "target": "http://localhost:8080",
+      "secure": true,
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/api/autocomplete": "/autocompleter"
+      },
+      "logLevel": "debug"
+    }
+  }

@@ -1,0 +1,30 @@
+<mat-form-field 
+  class="search-field w-full"
+  [class.autocomplete-open]="isAutocompleteOpen()"
+>
+  <input
+    matInput
+    [formControl]="searchControl"
+    [matAutocomplete]="auto"
+    (keydown.enter)="onSearch()"
+    class="search-input"
+    [placeholder]="placeholder()"
+  />
+  <mat-icon matPrefix>search</mat-icon>
+  @if (isLoadingAutocomplete()) {
+    <mat-progress-spinner matSuffix mode="indeterminate" diameter="20"></mat-progress-spinner>
+  }
+  <mat-autocomplete 
+    #auto="matAutocomplete" 
+    [displayWith]="displayFn"
+    panelClass="autocomplete-panel"
+    (opened)="onAutocompleteOpened()"
+    (closed)="onAutocompleteClosed()"
+  >
+    @for (suggestion of suggestions(); track suggestion) {
+      <mat-option [value]="suggestion">
+        <mat-icon>search</mat-icon>{{ suggestion }}
+      </mat-option>
+    }
+  </mat-autocomplete>
+</mat-form-field>

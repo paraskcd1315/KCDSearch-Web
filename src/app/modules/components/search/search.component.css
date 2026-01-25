@@ -1,0 +1,115 @@
+:host {
+  display: block;
+}
+
+.search-field {
+  width: 100%;
+}
+
+/* Text field base styles */
+.search-field .mdc-text-field {
+  border-radius: 24px;
+  background-color: var(--mat-sys-surface-container);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease, border-radius 0.2s ease;
+}
+
+.search-field .mdc-text-field:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.search-field .mdc-text-field--focused {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Notched outline base */
+.search-field .mdc-notched-outline {
+  border-radius: 24px;
+  transition: border-radius 0.2s ease;
+}
+
+.search-field .mdc-notched-outline__leading,
+.search-field .mdc-notched-outline__notch,
+.search-field .mdc-notched-outline__trailing {
+  border-width: 1px;
+  border-color: transparent;
+}
+
+/* Hide line-ripple border when panel is closed */
+.search-field:not(.autocomplete-open) .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+  border-bottom: none;
+}
+
+/* Focused state */
+.search-field .mdc-text-field--focused .mdc-notched-outline__leading,
+.search-field .mdc-text-field--focused .mdc-notched-outline__notch,
+.search-field .mdc-text-field--focused .mdc-notched-outline__trailing {
+  border-width: 2px;
+  border-color: var(--mat-sys-primary);
+}
+
+/* Autocomplete open state */
+.search-field.autocomplete-open .mdc-text-field {
+  border-radius: 24px 24px 0 0;
+}
+
+.search-field.autocomplete-open .mdc-notched-outline {
+  border-radius: 24px 24px 0 0;
+}
+
+.search-field.autocomplete-open .mdc-notched-outline__leading {
+  border-radius: 24px 0 0 0;
+}
+
+.search-field.autocomplete-open .mdc-notched-outline__trailing {
+  border-radius: 0 24px 0 0;
+}
+
+.search-field.autocomplete-open .mdc-notched-outline__leading,
+.search-field.autocomplete-open .mdc-notched-outline__notch,
+.search-field.autocomplete-open .mdc-notched-outline__trailing {
+  border-color: var(--mat-sys-outline-variant);
+}
+
+.search-field.autocomplete-open .mdc-text-field--focused .mdc-notched-outline__leading,
+.search-field.autocomplete-open .mdc-text-field--focused .mdc-notched-outline__notch,
+.search-field.autocomplete-open .mdc-text-field--focused .mdc-notched-outline__trailing {
+  border-color: var(--mat-sys-primary);
+}
+
+/* Input styles */
+.search-input {
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+}
+
+.search-field input::placeholder,
+.search-field input::-webkit-input-placeholder,
+.search-field input::-moz-placeholder,
+.search-field input:-ms-input-placeholder {
+  color: var(--mat-sys-on-surface-variant);
+  opacity: 0.6;
+}
+
+/* Icon spacing */
+.search-field .mat-mdc-form-field-icon-prefix,
+.search-field .mat-mdc-form-field-icon-suffix {
+  padding: 0 0.75rem;
+}
+
+/* Autocomplete panel */
+.autocomplete-panel {
+  border-radius: 0 0 16px 16px;
+  margin-top: -1px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  border-top: none;
+}
+
+.autocomplete-panel .mat-mdc-option {
+  padding: 0.75rem 1rem;
+  min-height: 48px;
+}
+
+.autocomplete-panel .mat-mdc-option:hover {
+  background-color: var(--mat-sys-surface-container-highest);
+}

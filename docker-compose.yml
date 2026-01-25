@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  kcdsearch:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kcdsearch
+    restart: unless-stopped
+    networks:
+      - proxy-net
+
+networks:
+  proxy-net:
+    external: true
