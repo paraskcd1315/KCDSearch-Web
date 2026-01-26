@@ -36,10 +36,13 @@ export class SearchPage implements OnInit, OnDestroy {
 
   query = computed(() => this.searchService.query());
   isLoading = computed(() => this.searchService.isLoading());
+  results = computed(() => this.searchService.results());
 
   tabs = searchTabs;
 
   activeTab = signal<number>(this.tabs.findIndex(tab => tab.value === SearchCategory.General));
+  showHeaderBackground = signal<boolean>(false);
+  private readonly scrollThreshold = 50;
 
   ngOnInit(): void {
     this.subscription.add(this.route.queryParams.subscribe((params) => {
@@ -56,6 +59,10 @@ export class SearchPage implements OnInit, OnDestroy {
         this.searchService.search(queryParam, this.searchService.category(), this.searchService.engines());
       }
     }))
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', this.onScroll.bind(this));
+    }
   }
 
   ngOnDestroy(): void {
@@ -69,5 +76,14 @@ export class SearchPage implements OnInit, OnDestroy {
 
   onSearch(query: string, category?: SearchCategory, engines?: string[]): void {
     this.searchService.search(query, category ?? this.searchService.category(), engines ?? this.searchService.engines());
+  }
+
+  onClear(): void {
+    this.router.navigate(['/']);
+  }
+
+  private onScroll(): void {
+    const scrollY = window.scrollY || window.pageYOffset;
+    this.showHeaderBackground.set(scrollY > this.scrollThreshold);
   }
 }

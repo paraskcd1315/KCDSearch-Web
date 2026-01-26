@@ -98,11 +98,12 @@
 }
 
 /* Autocomplete panel */
-.autocomplete-panel {
-  border-radius: 0 0 16px 16px;
+.mat-mdc-autocomplete-panel {
+  border-radius: 0 0 24px 24px !important;
   margin-top: -1px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
   border-top: none;
+  background-color: var(--mat-sys-surface-container) !important;
 }
 
 .autocomplete-panel .mat-mdc-option {

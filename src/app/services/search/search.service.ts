@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { SearXNGResponse, SearXNGResult } from '../../types/search.types';
+import { Infobox, SearXNGResponse, SearXNGResult } from '../../types/search.types';
 import { SearchCategory } from '../../enums/search.enums';
 
 @Injectable({
@@ -17,6 +17,7 @@ export class SearchService {
   readonly engines = signal<string[]>([]);
   readonly currentPage = signal<number>(1);
   readonly accumulatedResults = signal<SearXNGResult[]>([]);
+  readonly information = signal<Infobox[]>([]);
   readonly isLoadingPage = signal<boolean>(false);
   readonly hasMorePages = signal<boolean>(true);
   readonly totalResults = signal<number>(0);
@@ -44,9 +45,18 @@ export class SearchService {
     return params;
   }
 
-  private async loadPage(page: number): Promise<SearXNGResult[]> {
+  private async loadPage(page: number): Promise<SearXNGResponse> {
     const query = this.query().trim();
-    if (!query) return [];
+    if (!query) return {
+      query: '',
+      number_of_results: 0,
+      results: [],
+      answers: [],
+      corrections: [],
+      infoboxes: [],
+      suggestions: [],
+      unresponsive_engines: [],
+    };
 
     const response = await firstValueFrom(
       this.http.get<SearXNGResponse>(this.searxngUrl, {
@@ -54,8 +64,8 @@ export class SearchService {
       })
     );
 
-    this.totalResults.set(response.number_of_results || 0);
-    return response.results || [];
+    this.totalResults.set(response.number_of_results ?? 0);
+    return response;
   }
 
   private async executeWithLoading<T>(
@@ -111,9 +121,10 @@ export class SearchService {
     this.resetPagination();
 
     await this.executeWithLoading(async () => {
-      const results = await this.loadPage(1);
-      this.accumulatedResults.set(results);
-      this.hasMorePages.set(results.length > 0);
+      const resp = await this.loadPage(1);
+      this.accumulatedResults.set(resp.results);
+      this.hasMorePages.set(resp.number_of_results > 0);
+      this.information.set(resp.infoboxes ?? []);
     });
   }
 
@@ -125,12 +136,13 @@ export class SearchService {
     const nextPage = this.currentPage() + 1;
 
     await this.executeWithLoading(async () => {
-      const results = await this.loadPage(nextPage);
+      const resp = await this.loadPage(nextPage);
 
-      if (results.length === 0) {
+      if (resp.results.length === 0) {
         this.hasMorePages.set(false);
       } else {
-        this.accumulatedResults.update((current) => [...current, ...results]);
+        this.accumulatedResults.update((current) => [...current, ...resp.results]);
+        this.information.set(resp.infoboxes ?? []);
         this.currentPage.set(nextPage);
       }
     });
@@ -153,6 +165,7 @@ export class SearchService {
     this.totalResults.set(0);
     this.resetPagination();
     this.isLoadingPage.set(false);
+    this.information.set([]);
   }
 
   get error(): Signal<unknown> {

@@ -1,10 +1,10 @@
-import { Component, effect, inject, input, output, signal, ViewEncapsulation } from '@angular/core';
+import { Component, effect, inject, input, output, signal, viewChild, ViewEncapsulation } from '@angular/core';
 import { SearchService } from '../../../services/search/search.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
@@ -32,11 +32,14 @@ export class SearchComponent {
 
   readonly search = output<string>();
   readonly valueChange = output<string>();
+  readonly clear = output<void>();
 
   readonly searchControl = new FormControl(this.initialValue());
   readonly suggestions = signal<string[]>([]);
   readonly isLoadingAutocomplete = signal<boolean>(false);
   readonly isAutocompleteOpen = signal<boolean>(false);
+
+  readonly autocompleteTrigger = viewChild.required<MatAutocompleteTrigger>('autocompleteTrigger');
 
   constructor() {
     effect(() => {
@@ -79,6 +82,7 @@ export class SearchComponent {
     this.suggestions.set([]);
     this.isAutocompleteOpen.set(false);
     this.searchService.clear();
+    this.clear.emit();
   }
 
   onSuggestionClick(suggestion: string): void {
@@ -89,6 +93,8 @@ export class SearchComponent {
   onSearch(): void {
     const query = this.searchControl.value?.trim();
     if (query) {
+      this.autocompleteTrigger()?.closePanel();
+      this.isAutocompleteOpen.set(false);
       this.search.emit(query);
     }
   }

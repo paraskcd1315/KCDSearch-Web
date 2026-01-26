@@ -1,9 +1,15 @@
 @import "tailwindcss";
 
 ::ng-deep .mat-mdc-tab-labels {
-  @apply max-w-screen-xl lg:mx-auto lg:px-16;
+  @apply max-w-screen-xl lg:mx-auto 2xl:px-0 lg:px-16;
 }
 
-.container {
+.tab-data {
   background-color: var(--mat-sys-surface-container);
+}
+
+.header-scrolled {
+  background-color: rgba(var(--mat-sys-surface-container-high), 0.8);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }

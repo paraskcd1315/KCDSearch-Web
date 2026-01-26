@@ -1,1 +1,15 @@
-<p>search-result.component works!</p>
+<a href="{{ result()?.url }}" target="_blank" class="w-full">
+  <mat-card appearance="outlined" class="result-card">
+    <mat-card-header>
+      <div class="flex flex-col gap-0">
+        <span class="text-sm text-gray-400/80">{{ result()?.url }}</span>
+        <mat-card-title>
+          <a href="{{ result()?.url }}" target="_blank" class="text-lg font-bold text-primary">{{ result()?.title }}</a>
+        </mat-card-title>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="line-clamp-3 text-sm">{{ result()?.content }}</p>
+    </mat-card-content>
+  </mat-card>
+</a>

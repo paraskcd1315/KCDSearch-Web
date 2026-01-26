@@ -3,6 +3,7 @@
   [class.autocomplete-open]="isAutocompleteOpen()"
 >
   <input
+    #autocompleteTrigger="matAutocompleteTrigger"
     matInput
     [formControl]="searchControl"
     [matAutocomplete]="auto"
