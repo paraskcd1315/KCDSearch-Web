@@ -11,12 +11,14 @@
     </mat-card-header>
     <mat-card-content>
       @if (result()?.iframe_src) {
-        <iframe [src]="getSafeIframeSrc(result()?.iframe_src)" class="w-full h-48 rounded-md mt-2"></iframe>
+        <iframe [src]="getSafeIframeSrc(result()?.iframe_src)" class="w-full h-72 rounded-md mt-2" (error)="onImageError()"></iframe>
       }
-      @else if (result()?.thumbnail) {
-        <img [src]="result()?.thumbnail" [alt]="result()?.title" class="w-full h-48 object-cover rounded-md mt-2">
-      }
-      <p class="line-clamp-3 text-sm mt-2">{{ result()?.content }}</p>
+      <div class="flex gap-2">
+        @if (result()?.thumbnail && !result()?.iframe_src) {
+          <img [src]="result()?.thumbnail" [alt]="result()?.title" class="w-32 object-cover rounded-md mt-2 h-32" [class.hidden]="imageError()" (error)="onImageError()">
+        }
+        <p class="line-clamp-3 text-sm mt-2">{{ result()?.content }}</p>
+      </div>
       <span class="text-xs text-gray-300/80 text-right mt-2">{{ result()?.engines?.join(', ') }}</span>
     </mat-card-content>
   </mat-card>

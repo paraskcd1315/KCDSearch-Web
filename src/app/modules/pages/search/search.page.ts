@@ -79,6 +79,7 @@ export class SearchPage implements OnInit, OnDestroy {
   }
 
   onSearch(query: string, category?: SearchCategory, engines?: string[]): void {
+    this.router.navigate(['search'], { queryParams: { q: query }, queryParamsHandling: 'merge' });
     this.searchService.search(query, category ?? this.searchService.category(), engines ?? this.searchService.engines());
   }
 
