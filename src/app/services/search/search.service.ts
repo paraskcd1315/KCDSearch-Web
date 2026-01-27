@@ -97,7 +97,6 @@ export class SearchService {
         })
       );
 
-      // Handle different response formats
       if (Array.isArray(response) && response.length === 2 && Array.isArray(response[1])) {
         return response[1];
       }
@@ -123,7 +122,7 @@ export class SearchService {
     await this.executeWithLoading(async () => {
       const resp = await this.loadPage(1);
       this.accumulatedResults.set(resp.results);
-      this.hasMorePages.set(resp.number_of_results > 0);
+      this.hasMorePages.set(resp.results.length !== 0);
       this.information.set(resp.infoboxes ?? []);
     });
   }
@@ -142,7 +141,7 @@ export class SearchService {
         this.hasMorePages.set(false);
       } else {
         this.accumulatedResults.update((current) => [...current, ...resp.results]);
-        this.information.set(resp.infoboxes ?? []);
+        this.information.set(resp.infoboxes && resp.infoboxes.length > 0 ? resp.infoboxes : this.information());
         this.currentPage.set(nextPage);
       }
     });

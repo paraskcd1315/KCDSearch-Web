@@ -1,6 +1,6 @@
 {
     "/api/search": {
-      "target": "http://localhost:8080",
+      "target": "http://host.docker.internal:8080",
       "secure": true,
       "changeOrigin": true,
       "pathRewrite": {
@@ -9,7 +9,7 @@
       "logLevel": "debug"
     },
     "/api/autocomplete": {
-      "target": "http://localhost:8080",
+      "target": "http://host.docker.internal:8080",
       "secure": true,
       "changeOrigin": true,
       "pathRewrite": {

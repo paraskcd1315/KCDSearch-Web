@@ -15,6 +15,7 @@ export interface SearXNGResult {
     engines?: string[];
     priority?: string;
     category?: string;
+    iframe_src?: string;
 }
 
 export interface InfoboxImage {

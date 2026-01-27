@@ -28,21 +28,22 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   styleUrl: './search.page.scss',
 })
 export class SearchPage implements OnInit, OnDestroy {
+  readonly SearchCategory = SearchCategory;
   private readonly route = inject(ActivatedRoute);
   private readonly searchService = inject(SearchService);
   private readonly subscription = new Subscription();
   private readonly router = inject(Router);
-  readonly SearchCategory = SearchCategory;
+  private readonly scrollThreshold = 50;
+  private readonly infiniteScrollThreshold = 200;
+  
+  tabs = searchTabs;
+  private isLoadingMore = signal<boolean>(false);
+  activeTab = signal<number>(this.tabs.findIndex(tab => tab.value === SearchCategory.General));
+  showHeaderBackground = signal<boolean>(false);
 
   query = computed(() => this.searchService.query());
   isLoading = computed(() => this.searchService.isLoading());
   results = computed(() => this.searchService.results());
-
-  tabs = searchTabs;
-
-  activeTab = signal<number>(this.tabs.findIndex(tab => tab.value === SearchCategory.General));
-  showHeaderBackground = signal<boolean>(false);
-  private readonly scrollThreshold = 50;
 
   ngOnInit(): void {
     this.subscription.add(this.route.queryParams.subscribe((params) => {
@@ -67,6 +68,9 @@ export class SearchPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('scroll', this.onScroll.bind(this));
+    }
   }
 
   onTabChange(event: MatTabChangeEvent): void {
@@ -85,5 +89,20 @@ export class SearchPage implements OnInit, OnDestroy {
   private onScroll(): void {
     const scrollY = window.scrollY || window.pageYOffset;
     this.showHeaderBackground.set(scrollY > this.scrollThreshold);
+
+    if (this.isLoadingMore() || !this.searchService.hasMorePages() || this.searchService.isLoadingPage()) {
+      return;
+    }
+
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollPosition = scrollY + windowHeight;
+
+    if (scrollPosition >= documentHeight - this.infiniteScrollThreshold) {
+      this.isLoadingMore.set(true);
+      this.searchService.loadNextPage().finally(() => {
+        this.isLoadingMore.set(false);
+      });
+    }
   }
 }

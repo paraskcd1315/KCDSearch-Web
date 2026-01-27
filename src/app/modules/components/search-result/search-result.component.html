@@ -2,14 +2,22 @@
   <mat-card appearance="outlined" class="result-card">
     <mat-card-header>
       <div class="flex flex-col gap-0">
-        <span class="text-sm text-gray-400/80">{{ result()?.url }}</span>
+        <span class="text-xs text-gray-300/80 break-all">{{ result()?.url }}</span>
         <mat-card-title>
-          <a href="{{ result()?.url }}" target="_blank" class="text-lg font-bold text-primary">{{ result()?.title }}</a>
+          <a href="{{ result()?.url }}" target="_blank" class="text-lg font-bold line-clamp-1 text-primary" [matTooltip]="result()?.title" [matTooltipPosition]="'above'">{{ result()?.title }}</a>
+          <span class="text-xs text-gray-300/80">{{ result()?.publishedDate | date:'dd MMM, yyyy' }}</span>
         </mat-card-title>
       </div>
     </mat-card-header>
     <mat-card-content>
-      <p class="line-clamp-3 text-sm">{{ result()?.content }}</p>
+      @if (result()?.iframe_src) {
+        <iframe [src]="getSafeIframeSrc(result()?.iframe_src)" class="w-full h-48 rounded-md mt-2"></iframe>
+      }
+      @else if (result()?.thumbnail) {
+        <img [src]="result()?.thumbnail" [alt]="result()?.title" class="w-full h-48 object-cover rounded-md mt-2">
+      }
+      <p class="line-clamp-3 text-sm mt-2">{{ result()?.content }}</p>
+      <span class="text-xs text-gray-300/80 text-right mt-2">{{ result()?.engines?.join(', ') }}</span>
     </mat-card-content>
   </mat-card>
 </a>

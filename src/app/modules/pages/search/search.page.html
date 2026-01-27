@@ -14,11 +14,11 @@
             <span class="text-sm font-medium">{{ tab.label }}</span>
           </div>
         </ng-template>
-        <div class="flex flex-col gap-4 tab-data" [class.h-dvh]="isLoading() || results().length > 0">
+        <div class="flex flex-col gap-4 tab-data" [class.h-dvh]="isLoading() && results().length === 0">
           @if (isLoading()) {
             <mat-progress-bar mode="indeterminate" class="mx-auto"></mat-progress-bar>
           }
-          @else {
+          @if (results().length !== 0) {
             @switch (tab.value) {
               @case (SearchCategory.AI) {
                 <app-ai-tab class="animate-fade-in-up delay-2"></app-ai-tab>
