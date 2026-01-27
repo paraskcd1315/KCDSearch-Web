@@ -1,1 +1,15 @@
-<p>images.tab works!</p>
+<div class="flex flex-wrap ml-5 py-4" >
+  @for (result of results(); track result.url) {
+    <app-search-image-result [result]="result"></app-search-image-result>
+  }
+</div>
+@if (isLoadingPage() && results().length > 0) {
+  <div class="w-full flex justify-center items-center py-4">
+    <mat-progress-spinner mode="indeterminate" diameter="20" class="w-full"></mat-progress-spinner>
+  </div>
+}
+@if (!hasMorePages() && results().length > 0) {
+  <div class="w-full flex justify-center items-center text-center text-sm text-gray-300/80 py-4">
+    No more results
+  </div>
+}

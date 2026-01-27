@@ -1,0 +1,15 @@
+<a 
+  [href]="result()?.url" 
+  target="_blank" 
+  class="flex flex-col relative cursor-pointer h-[228px] mb-5 mr-5 rounded-xl overflow-hidden bg-transparent flex-grow min-w-[100px] max-w-[400px]"
+  [style.flex-basis.px]="getFlexBasis(result())" [style.width.px]="getWidth(result())" [class.hidden]="imageError()">
+  <div class="w-full h-full relative overflow-hidden rounded-xl relative">
+    <img 
+      [src]="getImageSrc(result())" 
+      [alt]="result()?.title" 
+      class="w-full h-full object-cover rounded-xl align-top" (error)="onImageError()" />
+    <span class="text-xs text-gray-300/80 absolute bottom-1 right-1 p-2 bg-black/50 rounded-xl backdrop-blur-sm">{{ result()?.resolution }}</span>
+  </div>
+  <span class="text-sm line-clamp-1">{{ result()?.title }}</span>
+  <span class="text-xs line-clamp-1">{{ result()?.url }}</span>
+</a>

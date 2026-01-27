@@ -4,6 +4,7 @@ export interface SearXNGResult {
     url: string;
     title: string;
     thumbnail?: string;
+    thumbnail_src?: string;
     template?: string;
     score?: number;
     content: string;
@@ -16,6 +17,9 @@ export interface SearXNGResult {
     priority?: string;
     category?: string;
     iframe_src?: string;
+    resolution?: string;
+    img_format?: string;
+    filesize?: string;
 }
 
 export interface InfoboxImage {

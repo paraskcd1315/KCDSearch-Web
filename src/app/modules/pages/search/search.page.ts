@@ -11,6 +11,7 @@ import { SearchCategory } from '../../../enums/search.enums';
 import { AiTab } from './tabs/ai/ai.tab';
 import { GeneralTab } from './tabs/general/general.tab';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ImagesTab } from './tabs/images/images.tab';
 
 @Component({
   selector: 'app-search.page',
@@ -22,7 +23,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatIconModule,
     AiTab,
     GeneralTab,
-    MatProgressBarModule
+    MatProgressBarModule,
+    ImagesTab
   ],
   templateUrl: './search.page.html',
   styleUrl: './search.page.scss',
