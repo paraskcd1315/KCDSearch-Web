@@ -88,15 +88,19 @@ export class SearchPage implements OnInit, OnDestroy {
   }
 
   onTabChange(event: MatTabChangeEvent): void {
+    const category = this.tabs[event.index].value as SearchCategory;
+    const query = this.searchService.query();
+
     this.router.navigate(['/search'], {
-      queryParams: { category: this.tabs[event.index].value },
+      queryParams: {
+        q: query,
+        category,
+      },
       queryParamsHandling: 'merge',
     });
-    this.onSearch(
-      this.searchService.query(),
-      this.tabs[event.index].value as SearchCategory,
-      this.searchService.engines(),
-    );
+
+    this.activeTab.set(event.index);
+    this.searchService.search(query, category, this.searchService.engines());
   }
 
   onSearch(query: string, category?: SearchCategory, engines?: string[]): void {
