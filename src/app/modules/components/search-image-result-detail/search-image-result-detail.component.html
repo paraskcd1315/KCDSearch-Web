@@ -1,0 +1,56 @@
+@if (result(); as result) {
+  <aside
+    class="sidebar-slide-in w-full max-w-md h-full flex flex-col overflow-y-auto shadow-xl backdrop-blur-xl"
+    [style.background-color]="'rgba(var(--mat-sys-surface-container), 0.95)'"
+    [style.box-shadow]="'0 2px 8px rgba(0, 0, 0, 0.1)'"
+    (click)="$event.stopPropagation()"
+    role="dialog"
+    aria-label="Image detail"
+  >
+    <div
+      class="sticky top-0 z-10 flex items-center justify-between p-4 border-b backdrop-blur-xl"
+      [style.border-color]="'var(--mat-sys-outline-variant)'"
+    >
+      <h2 class="text-lg font-medium truncate pr-4" [style.color]="'var(--mat-sys-on-surface)'">
+        {{ result.title }}
+      </h2>
+      <button
+        type="button"
+        class="p-2 rounded-lg transition-colors hover:opacity-90 cursor-pointer"
+        (click)="closeImageDetail()"
+        aria-label="Close"
+      >
+        <mat-icon [svgIcon]="'heroicons_outline:x-mark'" class="text-gray-500"></mat-icon>
+      </button>
+    </div>
+    <div class="p-4 flex flex-col gap-4 flex-1 overflow-y-auto">
+      <div class="rounded-xl overflow-hidden flex-shrink-0">
+        <img
+          [src]="getImageSrc()"
+          [alt]="result.title"
+          class="w-full h-auto object-contain max-h-[60vh]"
+        />
+      </div>
+      @if (result.resolution) {
+        <p class="text-sm" [style.color]="'var(--mat-sys-on-surface-variant)'">
+          {{ result.resolution }}
+        </p>
+      }
+      @if (result.content) {
+        <p class="text-sm line-clamp-4" [style.color]="'var(--mat-sys-on-surface)'">
+          {{ result.content }}
+        </p>
+      }
+      <a
+        [href]="result.url"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 text-sm font-medium transition-opacity hover:opacity-90"
+        [style.color]="'var(--mat-sys-primary)'"
+      >
+        Open original
+        <mat-icon [svgIcon]="'heroicons_outline:arrow-top-right-on-square'"></mat-icon>
+      </a>
+    </div>
+  </aside>
+}

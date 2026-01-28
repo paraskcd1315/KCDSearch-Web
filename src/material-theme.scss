@@ -2,25 +2,46 @@
 
 html {
   height: 100%;
-  @include mat.theme((
-    color: (
-      tertiary: mat.$cyan-palette,
-      primary: mat.$orange-palette,
-      theme-type: dark,
-    ),
-    typography: (
-      font-family: 'Quicksand'
-    ),
-  ));
+  @include mat.theme(
+    (
+      color: (
+        tertiary: mat.$cyan-palette,
+        primary: mat.$orange-palette,
+        theme-type: dark,
+      ),
+      typography: (
+        font-family: 'Quicksand',
+      ),
+    )
+  );
 }
 
 body {
   color-scheme: dark;
   background-color: var(--mat-sys-surface);
-  background-image: linear-gradient(to bottom, var(--mat-sys-surface-container-high), var(--mat-sys-surface));
+  background-image: linear-gradient(
+    to bottom,
+    var(--mat-sys-surface-container-high),
+    var(--mat-sys-surface)
+  );
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
   margin: 0;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.sidebar-slide-in {
+  animation: slideInFromRight 0.5s ease-out forwards;
 }
 
 @keyframes fadeInUp {
@@ -34,8 +55,21 @@ body {
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
 .animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
+  animation: fadeInUp 0.5s ease-out forwards;
   opacity: 0;
 }
 

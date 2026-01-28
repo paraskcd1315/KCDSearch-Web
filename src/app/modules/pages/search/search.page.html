@@ -1,11 +1,24 @@
 <div class="flex flex-col gap-0">
-  <div class="sticky top-0 z-10 flex sm:flex-row flex-col items-center gap-8 animate-fade-in-up md:px-10 sm:px-8 px-4 pt-4 transition-all duration-300" [class.header-scrolled]="showHeaderBackground()">
+  <div
+    class="sticky top-0 z-10 flex sm:flex-row flex-col items-center gap-8 animate-fade-in-up md:px-10 sm:px-8 px-4 pt-4 transition-all duration-300"
+    [class.header-scrolled]="showHeaderBackground()"
+  >
     <a [routerLink]="['/']">
-      <img src="assets/images/KCDSearchLogo.png" alt="KCD Search" class="w-36">
+      <img src="assets/images/KCDSearchLogo.png" alt="KCD Search" class="w-36" />
     </a>
-    <app-search class="md:w-1/2 w-full sm:mt-4 -mt-4" [initialValue]="query()" (search)="onSearch($event)" (clear)="onClear()" />
+    <app-search
+      class="md:w-1/2 w-full sm:mt-4 -mt-4"
+      [initialValue]="query()"
+      (search)="onSearch($event)"
+      (clear)="onClear()"
+    />
   </div>
-  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" [selectedIndex]="activeTab()" (selectedTabChange)="onTabChange($event)">
+  <mat-tab-group
+    mat-stretch-tabs="false"
+    mat-align-tabs="start"
+    [selectedIndex]="activeTab()"
+    (selectedTabChange)="onTabChange($event)"
+  >
     @for (tab of tabs; track tab.value) {
       <mat-tab>
         <ng-template matTabLabel>
@@ -14,7 +27,10 @@
             <span class="text-sm font-medium">{{ tab.label }}</span>
           </div>
         </ng-template>
-        <div class="flex flex-col gap-4 tab-data" [class.h-dvh]="isLoading() && results().length === 0">
+        <div
+          class="flex flex-col gap-4 tab-data"
+          [class.h-dvh]="isLoading() && results().length === 0"
+        >
           @if (isLoading()) {
             <mat-progress-bar mode="indeterminate" class="mx-auto"></mat-progress-bar>
           }
@@ -35,4 +51,11 @@
       </mat-tab>
     }
   </mat-tab-group>
+  @if (selectedImageResult(); as result) {
+    <app-search-image-result-detail
+      class="fixed inset-0 z-[10000] flex justify-end bg-black/50"
+      (keydown.escape)="onCloseImageDetail()"
+      (click)="onCloseImageDetail()"
+    ></app-search-image-result-detail>
+  }
 </div>
