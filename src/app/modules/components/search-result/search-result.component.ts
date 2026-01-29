@@ -4,19 +4,16 @@ import { MatCardModule } from '@angular/material/card';
 import { SearXNGResult } from '../../../types/search.types';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SearchCategory } from '../../../enums/search.enums';
 
 @Component({
   selector: 'app-search-result',
-  imports: [
-    CommonModule,
-    MatCardModule,
-    DatePipe,
-    MatTooltipModule
-  ],
+  imports: [CommonModule, MatCardModule, DatePipe, MatTooltipModule],
   templateUrl: './search-result.component.html',
   styleUrl: './search-result.component.css',
 })
 export class SearchResultComponent {
+  readonly SearchCategory = SearchCategory;
   readonly result = input<SearXNGResult>();
   readonly sanitizer = inject(DomSanitizer);
   readonly imageError = signal<boolean>(false);

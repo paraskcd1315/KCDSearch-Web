@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+:host {
+  @apply sticky top-0 z-10 flex sm:flex-row flex-col items-center gap-8 md:px-10 sm:px-8 px-4 pt-4 transition-all duration-300;
+}

@@ -14,6 +14,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ImagesTab } from './tabs/images/images.tab';
 import { ImageDetailService } from '../../../services/image-detail/image-detail.service';
 import { SearchImageResultDetailComponent } from '../../components/search-image-result-detail/search-image-result-detail.component';
+import { SearchHeaderComponent } from '../../components/search-header/search-header.component';
 
 @Component({
   selector: 'app-search.page',
@@ -28,6 +29,7 @@ import { SearchImageResultDetailComponent } from '../../components/search-image-
     MatProgressBarModule,
     ImagesTab,
     SearchImageResultDetailComponent,
+    SearchHeaderComponent,
   ],
   templateUrl: './search.page.html',
   styleUrl: './search.page.scss',
@@ -48,7 +50,6 @@ export class SearchPage implements OnInit, OnDestroy {
   activeTab = signal<number>(this.tabs.findIndex((tab) => tab.value === SearchCategory.General));
   showHeaderBackground = signal<boolean>(false);
 
-  query = computed(() => this.searchService.query());
   isLoading = computed(() => this.searchService.isLoading());
   results = computed(() => this.searchService.results());
   selectedImageResult = computed(() => this.imageDetailService.selectedResult());

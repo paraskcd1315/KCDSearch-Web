@@ -1,0 +1,9 @@
+<a [routerLink]="['/']">
+  <img src="assets/images/KCDSearchLogo.png" alt="KCD Search" class="w-36" />
+</a>
+<app-search
+  class="md:w-1/2 w-full sm:mt-4 -mt-4"
+  [initialValue]="query()"
+  (search)="onSearch($event)"
+  (clear)="onClear()"
+/>

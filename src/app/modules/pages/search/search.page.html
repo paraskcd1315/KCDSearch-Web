@@ -1,18 +1,10 @@
 <div class="flex flex-col gap-0">
-  <div
-    class="sticky top-0 z-10 flex sm:flex-row flex-col items-center gap-8 animate-fade-in-up md:px-10 sm:px-8 px-4 pt-4 transition-all duration-300"
+  <app-search-header
+    (onSearch)="onSearch($event)"
+    (onClear)="onClear()"
+    class="animate-fade-in-up"
     [class.header-scrolled]="showHeaderBackground()"
-  >
-    <a [routerLink]="['/']">
-      <img src="assets/images/KCDSearchLogo.png" alt="KCD Search" class="w-36" />
-    </a>
-    <app-search
-      class="md:w-1/2 w-full sm:mt-4 -mt-4"
-      [initialValue]="query()"
-      (search)="onSearch($event)"
-      (clear)="onClear()"
-    />
-  </div>
+  ></app-search-header>
   <mat-tab-group
     mat-stretch-tabs="false"
     mat-align-tabs="start"
@@ -44,6 +36,18 @@
               }
               @case (SearchCategory.Images) {
                 <app-images-tab class="animate-fade-in-up delay-2"></app-images-tab>
+              }
+              @case (SearchCategory.Videos) {
+                <app-general-tab class="animate-fade-in-up delay-2"></app-general-tab>
+              }
+              @case (SearchCategory.News) {
+                <app-general-tab class="animate-fade-in-up delay-2"></app-general-tab>
+              }
+              @case (SearchCategory.Music) {
+                <app-general-tab class="animate-fade-in-up delay-2"></app-general-tab>
+              }
+              @case (SearchCategory.Science) {
+                <app-general-tab class="animate-fade-in-up delay-2"></app-general-tab>
               }
             }
           }

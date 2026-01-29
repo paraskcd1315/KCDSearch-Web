@@ -1,25 +1,48 @@
-<a href="{{ result()?.url }}" target="_blank" class="w-full">
+<div class="w-full">
   <mat-card appearance="outlined" class="result-card">
     <mat-card-header>
       <div class="flex flex-col gap-0">
         <span class="text-xs text-gray-300/80 break-all">{{ result()?.url }}</span>
         <mat-card-title>
-          <a href="{{ result()?.url }}" target="_blank" class="text-lg font-bold line-clamp-1 text-primary" [matTooltip]="result()?.title" [matTooltipPosition]="'above'">{{ result()?.title }}</a>
-          <span class="text-xs text-gray-300/80">{{ result()?.publishedDate | date:'dd MMM, yyyy' }}</span>
+          <a
+            href="{{ result()?.url }}"
+            target="_blank"
+            class="text-lg font-bold line-clamp-1 text-primary"
+            [matTooltip]="result()?.title"
+            [matTooltipPosition]="'above'"
+            >{{ result()?.title }}</a
+          >
+          <span class="text-xs text-gray-300/80">{{
+            result()?.publishedDate | date: 'dd MMM, yyyy - HH:mm'
+          }}</span>
         </mat-card-title>
       </div>
     </mat-card-header>
     <mat-card-content>
       @if (result()?.iframe_src) {
-        <iframe [src]="getSafeIframeSrc(result()?.iframe_src)" class="w-full h-72 rounded-md mt-2" (error)="onImageError()"></iframe>
+        <iframe
+          [src]="getSafeIframeSrc(result()?.iframe_src)"
+          class="w-full rounded-md mt-2"
+          [class.h-72]="result()?.category !== SearchCategory.Music"
+          [class.h-32]="result()?.category === SearchCategory.Music"
+          (error)="onImageError()"
+        ></iframe>
       }
       <div class="flex gap-2">
         @if (result()?.thumbnail && !result()?.iframe_src) {
-          <img [src]="result()?.thumbnail" [alt]="result()?.title" class="w-32 object-cover rounded-md mt-2 h-32" [class.hidden]="imageError()" (error)="onImageError()">
+          <img
+            [src]="result()?.thumbnail"
+            [alt]="result()?.title"
+            class="w-32 object-cover rounded-md mt-2 h-32"
+            [class.hidden]="imageError()"
+            (error)="onImageError()"
+          />
         }
         <p class="line-clamp-3 text-sm mt-2">{{ result()?.content }}</p>
       </div>
-      <span class="text-xs text-gray-300/80 text-right mt-2">{{ result()?.engines?.join(', ') }}</span>
+      <span class="text-xs text-gray-300/80 text-right mt-2">{{
+        result()?.engines?.join(', ')
+      }}</span>
     </mat-card-content>
   </mat-card>
-</a>
+</div>
