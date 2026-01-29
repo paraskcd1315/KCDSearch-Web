@@ -57,7 +57,6 @@
   </mat-tab-group>
   @if (selectedImageResult(); as result) {
     <app-search-image-result-detail
-      class="fixed inset-0 z-[10000] flex justify-end bg-black/50"
       (keydown.escape)="onCloseImageDetail()"
       (click)="onCloseImageDetail()"
     ></app-search-image-result-detail>

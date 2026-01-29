@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+:host {
+  @apply fixed inset-0 z-[10000] flex justify-end bg-black/50;
+}
