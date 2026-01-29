@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { CommonModule, NgComponentOutlet } from '@angular/common';
+import { Component, computed, inject, OnDestroy, OnInit, signal, Type } from '@angular/core';
 import { SearchComponent } from '../../components/search/search.component';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SearchService } from '../../../services/search/search.service';
@@ -30,6 +30,7 @@ import { SearchHeaderComponent } from '../../components/search-header/search-hea
     ImagesTab,
     SearchImageResultDetailComponent,
     SearchHeaderComponent,
+    NgComponentOutlet,
   ],
   templateUrl: './search.page.html',
   styleUrl: './search.page.scss',
@@ -43,6 +44,8 @@ export class SearchPage implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly scrollThreshold = 50;
   private readonly infiniteScrollThreshold = 200;
+  private readonly tabComponentCache = new Map<SearchCategory, Type<unknown>>();
+  readonly currentTabComponent = signal<Type<unknown> | null>(null);
 
   tabs = searchTabs;
 
@@ -53,22 +56,31 @@ export class SearchPage implements OnInit, OnDestroy {
   isLoading = computed(() => this.searchService.isLoading());
   results = computed(() => this.searchService.results());
   selectedImageResult = computed(() => this.imageDetailService.selectedResult());
+  isImageTab = computed(() => this.tabs[this.activeTab()].value === SearchCategory.Images);
 
   ngOnInit(): void {
     this.subscription.add(
       this.route.queryParams.subscribe((params) => {
         const queryParam = params['q'];
-        const categoryParam = params['category'];
-        if (queryParam && !this.searchService.query().trim()) {
+        const categoryParam = params['category'] as SearchCategory | undefined;
+
+        if (queryParam != null) {
           this.searchService.query.set(queryParam);
-          if (categoryParam) {
-            this.searchService.setCategory(categoryParam as SearchCategory);
-            this.activeTab.set(this.tabs.findIndex((tab) => tab.value === categoryParam));
-          } else {
-            this.searchService.setCategory(this.tabs[this.activeTab()].value);
-          }
+        }
+
+        if (categoryParam != null) {
+          this.searchService.setCategory(categoryParam);
+          this.activeTab.set(this.tabs.findIndex((tab) => tab.value === categoryParam));
+          this.loadTabComponent(categoryParam);
+        } else {
+          this.searchService.setCategory(this.tabs[this.activeTab()].value);
+          this.loadTabComponent(this.tabs[this.activeTab()].value as SearchCategory);
+        }
+
+        const query = this.searchService.query().trim();
+        if (query) {
           this.searchService.search(
-            queryParam,
+            query,
             this.searchService.category(),
             this.searchService.engines(),
           );
@@ -99,9 +111,6 @@ export class SearchPage implements OnInit, OnDestroy {
       },
       queryParamsHandling: 'merge',
     });
-
-    this.activeTab.set(event.index);
-    this.searchService.search(query, category, this.searchService.engines());
   }
 
   onSearch(query: string, category?: SearchCategory, engines?: string[]): void {
@@ -143,5 +152,20 @@ export class SearchPage implements OnInit, OnDestroy {
 
   onCloseImageDetail(): void {
     this.imageDetailService.close();
+  }
+
+  private loadTabComponent(category: SearchCategory): void {
+    const cached = this.tabComponentCache.get(category);
+    if (cached) {
+      this.currentTabComponent.set(cached);
+      return;
+    }
+    const tab = this.tabs.find((t) => t.value === category);
+    if (tab?.loader) {
+      tab.loader().then((componentType: Type<unknown>) => {
+        this.tabComponentCache.set(category, componentType);
+        this.currentTabComponent.set(componentType);
+      });
+    }
   }
 }

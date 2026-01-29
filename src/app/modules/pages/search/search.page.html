@@ -11,7 +11,7 @@
     [selectedIndex]="activeTab()"
     (selectedTabChange)="onTabChange($event)"
   >
-    @for (tab of tabs; track tab.value) {
+    @for (tab of tabs; track tab.value; let i = $index) {
       <mat-tab>
         <ng-template matTabLabel>
           <div class="flex items-center gap-2 animate-fade-in-up delay-1">
@@ -26,30 +26,15 @@
           @if (isLoading()) {
             <mat-progress-bar mode="indeterminate" class="mx-auto"></mat-progress-bar>
           }
-          @if (results().length !== 0) {
-            @switch (tab.value) {
-              @case (SearchCategory.AI) {
-                <app-ai-tab class="animate-fade-in-up delay-2"></app-ai-tab>
-              }
-              @case (SearchCategory.General) {
-                <app-general-tab class="animate-fade-in-up delay-2"></app-general-tab>
-              }
-              @case (SearchCategory.Images) {
-                <app-images-tab class="animate-fade-in-up delay-2"></app-images-tab>
-              }
-              @case (SearchCategory.Videos) {
-                <app-general-tab class="animate-fade-in-up delay-2"></app-general-tab>
-              }
-              @case (SearchCategory.News) {
-                <app-general-tab class="animate-fade-in-up delay-2"></app-general-tab>
-              }
-              @case (SearchCategory.Music) {
-                <app-general-tab class="animate-fade-in-up delay-2"></app-general-tab>
-              }
-              @case (SearchCategory.Science) {
-                <app-general-tab class="animate-fade-in-up delay-2"></app-general-tab>
-              }
-            }
+          @if (results().length !== 0 && activeTab() === i && currentTabComponent()) {
+            <div
+              class="animate-fade-in-up delay-2"
+              [ngClass]="{
+                'max-w-screen-xl lg:mx-auto 2xl:px-0 lg:px-20 px-8 py-8': !isImageTab(),
+              }"
+            >
+              <ng-container *ngComponentOutlet="currentTabComponent()"></ng-container>
+            </div>
           }
         </div>
       </mat-tab>
