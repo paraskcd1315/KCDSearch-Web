@@ -1,51 +1,68 @@
-<div class="flex md:flex-row flex-col-reverse gap-8">
-  <div class="flex flex-col gap-4 w-full">
-    @for (result of results(); track result.url) {
-      <app-search-result [result]="result"></app-search-result>
-    }
-    @if (isLoadingPage() && results().length > 0) {
-      <div class="flex justify-center items-center py-4">
-        <mat-progress-spinner
-          mode="indeterminate"
-          diameter="20"
-          class="w-full"
-        ></mat-progress-spinner>
+<div class="flex flex-col gap-4">
+  @if (showSpeedTestEmbed()) {
+    <div class="speed-test-embed w-full">
+      <div class="speed-test-embed__inner">
+        <iframe
+          class="speed-test-embed__iframe"
+          [src]="speedTestIframeSrc"
+          title="Speed test"
+        ></iframe>
       </div>
-    }
-    @if (!hasMorePages() && results().length > 0) {
-      <div class="text-center text-sm text-gray-400/80 py-4">No more results</div>
+      <div class="speed-test-embed__credit text-right text-sm mt-2 opacity-80">
+        Provided by
+        <a href="https://openspeedtest.com" target="_blank" rel="noopener">OpenSpeedtest.com</a>
+      </div>
+    </div>
+  }
+  <div class="flex md:flex-row flex-col-reverse gap-8">
+    <div class="flex flex-col gap-4 w-full">
+      @for (result of results(); track result.url) {
+        <app-search-result [result]="result"></app-search-result>
+      }
+      @if (isLoadingPage() && results().length > 0) {
+        <div class="flex justify-center items-center py-4">
+          <mat-progress-spinner
+            mode="indeterminate"
+            diameter="20"
+            class="w-full"
+          ></mat-progress-spinner>
+        </div>
+      }
+      @if (!hasMorePages() && results().length > 0) {
+        <div class="text-center text-sm text-gray-400/80 py-4">No more results</div>
+      }
+    </div>
+    @if (information().length > 0) {
+      <mat-accordion class="md:w-1/2 w-full">
+        @for (info of information(); track info.infobox) {
+          @if (info.attributes.length > 0) {
+            <mat-expansion-panel class="result-card">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <span class="text-sm truncate">{{ info.infobox }}</span>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="flex flex-col gap-4">
+                @for (attribute of info.attributes; track attribute.label) {
+                  <div class="flex flex-col gap-0">
+                    <span class="text-sm text-gray-400/80 font-bold">{{ attribute.label }}</span>
+                    <span class="text-sm">{{ attribute.value }}</span>
+                    @if (attribute.image) {
+                      <img
+                        [src]="attribute.image.src"
+                        [alt]="attribute.image.alt"
+                        class="max-w-full max-h-72 object-contain rounded-md"
+                      />
+                    }
+                  </div>
+                }
+              </div>
+            </mat-expansion-panel>
+          }
+        }
+      </mat-accordion>
+    } @else {
+      <div class="md:w-1/2 w-full"></div>
     }
   </div>
-  @if (information().length > 0) {
-    <mat-accordion class="md:w-1/2 w-full">
-      @for (info of information(); track info.infobox) {
-        @if (info.attributes.length > 0) {
-          <mat-expansion-panel class="result-card">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <span class="text-sm truncate">{{ info.infobox }}</span>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="flex flex-col gap-4">
-              @for (attribute of info.attributes; track attribute.label) {
-                <div class="flex flex-col gap-0">
-                  <span class="text-sm text-gray-400/80 font-bold">{{ attribute.label }}</span>
-                  <span class="text-sm">{{ attribute.value }}</span>
-                  @if (attribute.image) {
-                    <img
-                      [src]="attribute.image.src"
-                      [alt]="attribute.image.alt"
-                      class="max-w-full max-h-72 object-contain rounded-md"
-                    />
-                  }
-                </div>
-              }
-            </div>
-          </mat-expansion-panel>
-        }
-      }
-    </mat-accordion>
-  } @else {
-    <div class="md:w-1/2 w-full"></div>
-  }
 </div>

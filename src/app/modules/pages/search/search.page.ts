@@ -154,18 +154,18 @@ export class SearchPage implements OnInit, OnDestroy {
     this.imageDetailService.close();
   }
 
-  private loadTabComponent(category: SearchCategory): void {
+  private async loadTabComponent(category: SearchCategory): Promise<void> {
     const cached = this.tabComponentCache.get(category);
     if (cached) {
       this.currentTabComponent.set(cached);
+
       return;
     }
     const tab = this.tabs.find((t) => t.value === category);
     if (tab?.loader) {
-      tab.loader().then((componentType: Type<unknown>) => {
-        this.tabComponentCache.set(category, componentType);
-        this.currentTabComponent.set(componentType);
-      });
+      const componentType = await tab.loader();
+      this.tabComponentCache.set(category, componentType);
+      this.currentTabComponent.set(componentType);
     }
   }
 }

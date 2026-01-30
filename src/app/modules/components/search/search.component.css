@@ -11,7 +11,9 @@
   border-radius: 24px;
   background-color: var(--mat-sys-surface-container);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.2s ease, border-radius 0.2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    border-radius 0.2s ease;
 }
 
 .search-field .mdc-text-field:hover {
@@ -36,7 +38,9 @@
 }
 
 /* Hide line-ripple border when panel is closed */
-.search-field:not(.autocomplete-open) .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::before {
+.search-field:not(.autocomplete-open)
+  .mdc-text-field--filled:not(.mdc-text-field--disabled)
+  .mdc-line-ripple::before {
   border-bottom: none;
 }
 

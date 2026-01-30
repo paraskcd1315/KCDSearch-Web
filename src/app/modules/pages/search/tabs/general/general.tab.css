@@ -1,3 +1,41 @@
 .result-card {
   background-color: var(--mat-sys-surface-container-high);
+  border: 1px solid var(--mat-sys-surface-variant);
+}
+
+/* Speed test embed: full width, responsive aspect ratio */
+.speed-test-embed {
+  width: 100%;
+  background-color: transparent;
+  background: transparent;
+}
+
+.speed-test-embed__inner {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  min-height: 32rem;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  background-color: transparent;
+  background: transparent;
+}
+
+.speed-test-embed__iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid var(--mat-sys-surface-variant);
+}
+
+@media (max-width: 640px) {
+  .speed-test-embed__inner {
+    aspect-ratio: 1 / 1;
+    min-height: 320px;
+  }
 }

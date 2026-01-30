@@ -6,53 +6,87 @@ export const searchTabs: SearchTab[] = [
     label: 'AI',
     value: SearchCategory.AI,
     icon: 'heroicons_outline:sparkles',
-    loader: () => import('../modules/pages/search/tabs/ai/ai.tab').then((m) => m.AiTab),
+    loader: async () => (await import('../modules/pages/search/tabs/ai/ai.tab')).AiTab,
   },
   {
     label: 'General',
     value: SearchCategory.General,
     icon: 'heroicons_outline:magnifying-glass',
-    loader: () =>
-      import('../modules/pages/search/tabs/general/general.tab').then((m) => m.GeneralTab),
+    loader: async () =>
+      (await import('../modules/pages/search/tabs/general/general.tab')).GeneralTab,
   },
   {
     label: 'Images',
     value: SearchCategory.Images,
     icon: 'heroicons_outline:photo',
-    loader: () => import('../modules/pages/search/tabs/images/images.tab').then((m) => m.ImagesTab),
+    loader: async () => (await import('../modules/pages/search/tabs/images/images.tab')).ImagesTab,
   },
   {
     label: 'Videos',
     value: SearchCategory.Videos,
     icon: 'heroicons_outline:video-camera',
-    loader: () =>
-      import('../modules/pages/search/tabs/general/general.tab').then((m) => m.GeneralTab),
+    loader: async () =>
+      (await import('../modules/pages/search/tabs/general/general.tab')).GeneralTab,
   },
   {
     label: 'News',
     value: SearchCategory.News,
     icon: 'heroicons_outline:newspaper',
-    loader: () =>
-      import('../modules/pages/search/tabs/general/general.tab').then((m) => m.GeneralTab),
+    loader: async () =>
+      (await import('../modules/pages/search/tabs/general/general.tab')).GeneralTab,
   },
   {
     label: 'Map',
     value: SearchCategory.Map,
     icon: 'heroicons_outline:map',
-    loader: () => import('../modules/pages/search/tabs/map/map.tab').then((m) => m.MapTab),
+    loader: async () => (await import('../modules/pages/search/tabs/map/map.tab')).MapTab,
   },
   {
     label: 'Music',
     value: SearchCategory.Music,
     icon: 'heroicons_outline:musical-note',
-    loader: () =>
-      import('../modules/pages/search/tabs/general/general.tab').then((m) => m.GeneralTab),
+    loader: async () =>
+      (await import('../modules/pages/search/tabs/general/general.tab')).GeneralTab,
   },
   {
     label: 'Science',
     value: SearchCategory.Science,
     icon: 'heroicons_outline:academic-cap',
-    loader: () =>
-      import('../modules/pages/search/tabs/general/general.tab').then((m) => m.GeneralTab),
+    loader: async () =>
+      (await import('../modules/pages/search/tabs/general/general.tab')).GeneralTab,
   },
 ];
+
+export const SPEED_TEST_QUERIES: readonly string[] = [
+  // English
+  'speed test',
+  'speedtest',
+  'internet speed test',
+  'broadband speed test',
+  'test my internet speed',
+  'check internet speed',
+  'wifi speed test',
+  'network speed test',
+  'connection speed test',
+  'how fast is my internet',
+  'test speed',
+  'speed check',
+  // Spanish
+  'test de velocidad',
+  'prueba de velocidad',
+  'velocidad de internet',
+  'test velocidad internet',
+  'medir velocidad internet',
+  'velocidad wifi',
+  'velocidad de conexión',
+  'test de velocidad internet',
+  'prueba velocidad',
+  'velocidad internet',
+  'medir velocidad',
+];
+
+export function isSpeedTestQuery(query: string): boolean {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return false;
+  return SPEED_TEST_QUERIES.some((phrase) => normalized === phrase || normalized.includes(phrase));
+}

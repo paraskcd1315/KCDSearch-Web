@@ -1,20 +1,29 @@
 {
-    "/api/search": {
-      "target": "http://host.docker.internal:8080",
-      "secure": true,
-      "changeOrigin": true,
-      "pathRewrite": {
-        "^/api/search": "/search"
-      },
-      "logLevel": "debug"
+  "/api/search": {
+    "target": "http://host.docker.internal:8080",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/search": "/search"
     },
-    "/api/autocomplete": {
-      "target": "http://host.docker.internal:8080",
-      "secure": true,
-      "changeOrigin": true,
-      "pathRewrite": {
-        "^/api/autocomplete": "/autocompleter"
-      },
-      "logLevel": "debug"
-    }
+    "logLevel": "debug"
+  },
+  "/api/autocomplete": {
+    "target": "http://host.docker.internal:8080",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/autocomplete": "/autocompleter"
+    },
+    "logLevel": "debug"
+  },
+  "/speedtest": {
+    "target": "http://host.docker.internal:3002",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/speedtest": ""
+    },
+    "logLevel": "debug"
   }
+}
