@@ -1,0 +1,26 @@
+:host {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  max-width: 24rem;
+}
+
+.map-poi-detail-panel {
+  background-color: rgba(36, 30, 27, 0.8);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--mat-sys-outline-variant, #ccc);
+}
+
+.map-poi-detail-header {
+  border-bottom: 1px solid var(--mat-sys-outline-variant, #eee);
+}
+
+.map-poi-detail-title {
+  color: var(--mat-sys-on-surface, #1a1a1a);
+}
+
+.map-poi-detail-body {
+  color: var(--mat-sys-on-surface-variant, #444);
+}

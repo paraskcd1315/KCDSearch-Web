@@ -1,0 +1,20 @@
+:host {
+  display: block;
+}
+
+.map-wrapper {
+  width: 100dvw;
+  min-height: 400px;
+  height: calc(100dvh - 10.8rem);
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .map-wrapper {
+    height: calc(100dvh - 14.5rem);
+  }
+}

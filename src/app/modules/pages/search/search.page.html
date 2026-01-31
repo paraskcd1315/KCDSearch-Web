@@ -26,14 +26,21 @@
           @if (isLoading()) {
             <mat-progress-bar mode="indeterminate" class="mx-auto"></mat-progress-bar>
           }
-          @if (results().length !== 0 && activeTab() === i && currentTabComponent()) {
+          @if (
+            (results().length !== 0 || isMapTab()) && activeTab() === i && currentTabComponent()
+          ) {
             <div
               class="animate-fade-in-up delay-2"
               [ngClass]="{
-                'max-w-screen-xl lg:mx-auto 2xl:px-0 lg:px-20 px-8 py-8': !isImageTab(),
+                'max-w-screen-xl lg:mx-auto 2xl:px-0 lg:px-20 px-8 py-8':
+                  !isImageTab() && !isMapTab(),
               }"
             >
               <ng-container *ngComponentOutlet="currentTabComponent()"></ng-container>
+            </div>
+          } @else if (!isLoading() && !isMapLoading()) {
+            <div class="h-[calc(100dvh-9.9rem)] w-dvw flex justify-center items-center">
+              No results found
             </div>
           }
         </div>

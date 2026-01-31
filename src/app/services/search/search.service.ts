@@ -3,6 +3,7 @@ import { computed, inject, Injectable, Signal, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Infobox, SearXNGResponse, SearXNGResult } from '../../types/search.types';
 import { SearchCategory } from '../../enums/search.enums';
+import { SearchCacheService } from '../search-cache/search-cache.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class SearchService {
   private readonly http = inject(HttpClient);
   private readonly searxngUrl = '/api/search';
   private readonly autocompleteUrl = '/api/autocomplete';
+  private readonly searchCache = inject(SearchCacheService);
 
   readonly query = signal<string>('');
   readonly category = signal<SearchCategory>(SearchCategory.General);
@@ -47,30 +49,42 @@ export class SearchService {
 
   private async loadPage(page: number): Promise<SearXNGResponse> {
     const query = this.query().trim();
-    if (!query) return {
-      query: '',
-      number_of_results: 0,
-      results: [],
-      answers: [],
-      corrections: [],
-      infoboxes: [],
-      suggestions: [],
-      unresponsive_engines: [],
-    };
+    if (!query)
+      return {
+        query: '',
+        number_of_results: 0,
+        results: [],
+        answers: [],
+        corrections: [],
+        infoboxes: [],
+        suggestions: [],
+        unresponsive_engines: [],
+      };
+
+    const category = this.category();
+    const engines = this.engines();
+    const cacheKey = this.searchCache.buildCacheKey(query, category, page, engines);
+
+    const cached = await this.searchCache.get(cacheKey);
+    if (cached) {
+      this.totalResults.set(cached.number_of_results ?? 0);
+      return cached;
+    }
 
     const response = await firstValueFrom(
       this.http.get<SearXNGResponse>(this.searxngUrl, {
         params: this.buildSearchParams(page),
-      })
+      }),
     );
 
+    await this.searchCache.set(cacheKey, response);
     this.totalResults.set(response.number_of_results ?? 0);
     return response;
   }
 
   private async executeWithLoading<T>(
     operation: () => Promise<T>,
-    onError?: (error: unknown) => void
+    onError?: (error: unknown) => void,
   ): Promise<T> {
     this.isLoadingPage.set(true);
     try {
@@ -94,25 +108,21 @@ export class SearchService {
       const response = await firstValueFrom(
         this.http.get<[string, string[]] | string[]>(this.autocompleteUrl, {
           params: httpParams,
-        })
+        }),
       );
 
       if (Array.isArray(response) && response.length === 2 && Array.isArray(response[1])) {
         return response[1];
       }
 
-      return Array.isArray(response) ? response as string[] : [];
+      return Array.isArray(response) ? (response as string[]) : [];
     } catch (error) {
       console.error('Autocomplete error:', error);
       return [];
     }
   }
 
-  async search(
-    query: string,
-    category?: SearchCategory,
-    engines?: string[]
-  ): Promise<void> {
+  async search(query: string, category?: SearchCategory, engines?: string[]): Promise<void> {
     this.query.set(query);
     if (category) this.category.set(category);
     if (engines) this.engines.set(engines);
@@ -141,7 +151,9 @@ export class SearchService {
         this.hasMorePages.set(false);
       } else {
         this.accumulatedResults.update((current) => [...current, ...resp.results]);
-        this.information.set(resp.infoboxes && resp.infoboxes.length > 0 ? resp.infoboxes : this.information());
+        this.information.set(
+          resp.infoboxes && resp.infoboxes.length > 0 ? resp.infoboxes : this.information(),
+        );
         this.currentPage.set(nextPage);
       }
     });

@@ -20,6 +20,19 @@ export interface SearXNGResult {
   resolution?: string;
   img_format?: string;
   filesize?: string;
+  latitude?: number;
+  longitude?: number;
+  boundingbox?: number[];
+  geojson?: { type: string; coordinates: number[] };
+  address?: {
+    name?: string;
+    house_number?: string | null;
+    road?: string;
+    locality?: string;
+    postcode?: string;
+    country?: string;
+  };
+  osm?: { type: string; id: number };
 }
 
 export interface InfoboxImage {

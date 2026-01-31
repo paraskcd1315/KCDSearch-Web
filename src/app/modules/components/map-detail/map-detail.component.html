@@ -1,0 +1,39 @@
+@if (poi(); as p) {
+  <aside
+    class="map-poi-detail-panel absolute top-4 right-4 z-[1000] max-w-96 overflow-hidden rounded-xl"
+    role="dialog"
+    aria-label="POI detail"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="flex items-center justify-between map-poi-detail-header p-4">
+      <h2 class="map-poi-detail-title truncate pr-2 text-lg font-medium">{{ p.name }}</h2>
+      <button
+        type="button"
+        class="p-2 rounded-lg transition-colors hover:opacity-90 cursor-pointer"
+        (click)="close()"
+        aria-label="Close"
+      >
+        <mat-icon svgIcon="heroicons_outline:x-mark"></mat-icon>
+      </button>
+    </div>
+    <div class="map-poi-detail-body p-4 text-sm">
+      @if (p.imageUrl) {
+        <div class="w-full overflow-hidden rounded-md">
+          <img
+            [src]="p.imageUrl"
+            [alt]="p.name"
+            loading="lazy"
+            class="max-w-full max-h-72 object-contain rounded-md"
+          />
+        </div>
+      }
+      <p>Type: {{ p.type }}</p>
+      @if (p.address) {
+        <p>Address: {{ p.address }}</p>
+      }
+      @if (p.openingHours) {
+        <p>Opening hours: {{ p.openingHours }}</p>
+      }
+    </div>
+  </aside>
+}
