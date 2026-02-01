@@ -18,3 +18,71 @@
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid var(--mat-sys-surface-variant);
 }
+
+::ng-deep .select-field .mdc-text-field {
+  border-radius: 0.5rem;
+  background-color: var(--mat-sys-surface-container);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition:
+    box-shadow 0.2s ease,
+    border-radius 0.2s ease;
+}
+
+::ng-deep .select-field .mdc-text-field:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+::ng-deep .select-field .mdc-text-field--focused {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+::ng-deep .select-field .mdc-notched-outline {
+  border-radius: 0.5rem;
+  transition: border-radius 0.2s ease;
+}
+
+::ng-deep .select-field .mdc-notched-outline__leading,
+::ng-deep .select-field .mdc-notched-outline__notch,
+::ng-deep .select-field .mdc-notched-outline__trailing {
+  border-width: 1px;
+  border-color: transparent;
+}
+
+::ng-deep
+  .select-field
+  .mdc-text-field--filled:not(.mdc-text-field--disabled)
+  .mdc-line-ripple::before {
+  border-bottom: none;
+}
+
+::ng-deep .select-field .mdc-text-field--focused .mdc-notched-outline__leading,
+::ng-deep .select-field .mdc-text-field--focused .mdc-notched-outline__notch,
+::ng-deep .select-field .mdc-text-field--focused .mdc-notched-outline__trailing {
+  border-width: 2px;
+  border-color: var(--mat-sys-primary);
+}
+
+::ng-deep .select-field .mat-mdc-select-trigger {
+  font-size: 1rem;
+}
+
+::ng-deep .select-field .mat-mdc-form-field-icon-prefix,
+::ng-deep .select-field .mat-mdc-form-field-icon-suffix {
+  padding: 0 0.75rem;
+}
+
+::ng-deep .select-field-panel.mat-mdc-select-panel {
+  border-radius: 0 0 0.5rem 0.5rem;
+  margin-top: -1px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  background-color: var(--mat-sys-surface-container);
+}
+
+::ng-deep .select-field-panel .mat-mdc-option {
+  padding: 0.75rem 1rem;
+  min-height: 48px;
+}
+
+::ng-deep .select-field-panel .mat-mdc-option:hover {
+  background-color: var(--mat-sys-surface-container-highest);
+}

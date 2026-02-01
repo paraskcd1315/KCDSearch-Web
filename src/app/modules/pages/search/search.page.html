@@ -36,6 +36,32 @@
                   !isImageTab() && !isMapTab(),
               }"
             >
+              <div
+                class="flex items-center gap-4 pb-2"
+                [ngClass]="{
+                  'px-8 pt-8': isImageTab(),
+                  hidden: results().length === 0 || isMapTab(),
+                }"
+              >
+                <mat-slide-toggle
+                  class="w-40 -mt-4"
+                  [formField]="searchForm.useLocale"
+                  (change)="refreshSearch()"
+                  >Local search</mat-slide-toggle
+                >
+                <mat-form-field class="select-field w-40">
+                  <mat-label>Safe search</mat-label>
+                  <mat-select
+                    [formField]="searchForm.safeSearch"
+                    panelClass="select-field-panel"
+                    (selectionChange)="refreshSearch()"
+                  >
+                    @for (option of safeSearchSelectOptions; track option.value) {
+                      <mat-option [value]="option.value">{{ option.label }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
               <ng-container *ngComponentOutlet="currentTabComponent()"></ng-container>
             </div>
           } @else if (!isLoading() && !isMapLoading()) {

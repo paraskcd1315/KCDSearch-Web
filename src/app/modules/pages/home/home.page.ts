@@ -16,7 +16,8 @@ export class HomePage {
   private readonly searchService = inject(SearchService);
   private readonly router = inject(Router);
 
-  async onSearch(query: string): Promise<void> {
+  async onSearch(query?: string): Promise<void> {
+    query = query ?? this.searchService.query();
     this.router.navigate(['search'], { queryParams: { q: query } });
     await this.searchService.search(query);
   }

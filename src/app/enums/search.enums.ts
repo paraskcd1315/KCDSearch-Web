@@ -8,3 +8,9 @@ export enum SearchCategory {
   Music = 'music',
   Science = 'science',
 }
+
+export enum SafeSearch {
+  Off = 'Off',
+  Moderate = 'Moderate',
+  Strict = 'Strict',
+}

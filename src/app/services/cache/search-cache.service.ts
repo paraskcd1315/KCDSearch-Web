@@ -33,10 +33,18 @@ export class SearchCacheService {
     });
   }
 
-  buildCacheKey(query: string, category: SearchCategory, page: number, engines: string[]): string {
+  buildCacheKey(
+    query: string,
+    category: SearchCategory,
+    page: number,
+    engines: string[],
+    language?: string,
+    safeSearch?: number,
+  ): string {
     const q = query.trim().toLowerCase();
     const eng = [...engines].sort().join(',');
-    return `${q}|${category}|${page}|${eng}`;
+    const lang = language ?? '';
+    return `${q}|${category}|${page}|${eng}|${lang}|${safeSearch}`;
   }
 
   async get(key: string): Promise<SearXNGResponse | null> {

@@ -74,6 +74,7 @@ export class SearchComponent {
         distinctUntilChanged(),
         filter((value) => value !== null && value.trim().length >= 2),
         switchMap(async (value) => {
+          this.searchService.query.set(value ?? '');
           this.isLoadingAutocomplete.set(true);
           const results = await this.searchService.autocomplete(value ?? '');
           this.isLoadingAutocomplete.set(false);

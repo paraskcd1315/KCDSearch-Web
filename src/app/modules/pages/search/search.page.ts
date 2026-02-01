@@ -1,5 +1,14 @@
 import { CommonModule, NgComponentOutlet } from '@angular/common';
-import { Component, computed, inject, OnDestroy, OnInit, signal, Type } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  Type,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SearchService } from '../../../services/search.service';
 import { Subscription } from 'rxjs';
@@ -12,6 +21,10 @@ import { ImageDetailService } from '../../../services/image-detail.service';
 import { SearchImageResultDetailComponent } from '../../components/search-image-result-detail/search-image-result-detail.component';
 import { SearchHeaderComponent } from '../../components/search-header/search-header.component';
 import { MapSearchService } from '../../../services/map-search/map-search.service';
+import { FormField } from '@angular/forms/signals';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSelectModule } from '@angular/material/select';
+import { SAFE_SEARCH_SELECT_OPTIONS } from '../../../utils/constants.utils';
 
 @Component({
   selector: 'app-search.page',
@@ -23,6 +36,9 @@ import { MapSearchService } from '../../../services/map-search/map-search.servic
     SearchImageResultDetailComponent,
     SearchHeaderComponent,
     NgComponentOutlet,
+    MatSlideToggleModule,
+    FormField,
+    MatSelectModule,
   ],
   templateUrl: './search.page.html',
   styleUrl: './search.page.scss',
@@ -38,7 +54,9 @@ export class SearchPage implements OnInit, OnDestroy {
   private readonly scrollThreshold = 50;
   private readonly infiniteScrollThreshold = 200;
   private readonly tabComponentCache = new Map<SearchCategory, Type<unknown>>();
+  readonly searchForm = this.searchService.searchForm;
   readonly currentTabComponent = signal<Type<unknown> | null>(null);
+  readonly safeSearchSelectOptions = SAFE_SEARCH_SELECT_OPTIONS;
 
   tabs = searchTabs;
 
@@ -172,5 +190,9 @@ export class SearchPage implements OnInit, OnDestroy {
       this.tabComponentCache.set(category, componentType);
       this.currentTabComponent.set(componentType);
     }
+  }
+
+  refreshSearch(): void {
+    this.searchService.refreshSearch();
   }
 }

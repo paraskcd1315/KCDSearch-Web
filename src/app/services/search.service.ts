@@ -1,10 +1,16 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { computed, inject, Injectable, Signal, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, Signal, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { Infobox, SearXNGResponse, SearXNGResult } from '../types/search.types';
-import { SearchCategory } from '../enums/search.enums';
+import { Infobox, SearchAttributes, SearXNGResponse, SearXNGResult } from '../types/search.types';
+import { SafeSearch, SearchCategory } from '../enums/search.enums';
 import { SearchCacheService } from './cache/search-cache.service';
-import { EMPTY_SEARCH_RESPONSE } from '../utils/constants.utils';
+import {
+  COUNTRY_TO_LANG,
+  EMPTY_SEARCH_RESPONSE,
+  SAFE_SEARCH_TO_SEARXNG,
+} from '../utils/constants.utils';
+import { form } from '@angular/forms/signals';
+import { GeolocationService } from './map-search/geolocation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +18,7 @@ import { EMPTY_SEARCH_RESPONSE } from '../utils/constants.utils';
 export class SearchService {
   private readonly http = inject(HttpClient);
   private readonly searchCache = inject(SearchCacheService);
+  private readonly geolocationService = inject(GeolocationService);
   private readonly searxngUrl = '/api/search';
   private readonly autocompleteUrl = '/api/autocomplete';
 
@@ -25,10 +32,30 @@ export class SearchService {
   readonly hasMorePages = signal<boolean>(true);
   readonly totalResults = signal<number>(0);
   readonly error = signal<unknown>(null);
+  readonly searchModel = signal<SearchAttributes>({ useLocale: true, safeSearch: SafeSearch.Off });
 
   readonly results = computed(() => this.accumulatedResults());
   readonly isLoading = computed(() => this.isLoadingPage());
   readonly hasSearched = computed(() => this.query().trim().length > 0);
+
+  readonly searchQueryForm = form(this.query);
+  readonly searchForm = form(this.searchModel);
+
+  constructor() {
+    this.init();
+    effect(() => {
+      localStorage.setItem('searchModel', JSON.stringify(this.searchModel()));
+    });
+  }
+
+  init(): void {
+    const savedModel = localStorage.getItem('searchModel');
+    if (savedModel) {
+      this.searchModel.set(JSON.parse(savedModel));
+    } else {
+      this.searchModel.set({ useLocale: true, safeSearch: SafeSearch.Off });
+    }
+  }
 
   async search(query: string, category?: SearchCategory, engines?: string[]): Promise<void> {
     this.query.set(query);
@@ -105,10 +132,19 @@ export class SearchService {
       .set('q', this.query().trim())
       .set('format', 'json')
       .set('pageno', String(page));
+
+    const lang = this.getEffectiveLanguage();
+    if (lang) p = p.set('language', lang);
+
     const cat = this.category();
     if (cat) p = p.set('categories', cat);
+
     const eng = this.engines();
     if (eng.length > 0) p = p.set('engines', eng.join(','));
+
+    const safeSearch = SAFE_SEARCH_TO_SEARXNG[this.searchModel().safeSearch];
+    if (safeSearch) p = p.set('safesearch', safeSearch);
+
     return p;
   }
 
@@ -116,7 +152,16 @@ export class SearchService {
     const q = this.query().trim();
     if (!q) return EMPTY_SEARCH_RESPONSE;
 
-    const cacheKey = this.searchCache.buildCacheKey(q, this.category(), page, this.engines());
+    const lang = this.getEffectiveLanguage();
+    const safeSearch = SAFE_SEARCH_TO_SEARXNG[this.searchModel().safeSearch];
+    const cacheKey = this.searchCache.buildCacheKey(
+      q,
+      this.category(),
+      page,
+      this.engines(),
+      lang,
+      safeSearch,
+    );
     const cached = await this.searchCache.get(cacheKey);
     if (cached) {
       this.totalResults.set(cached.number_of_results ?? 0);
@@ -152,5 +197,26 @@ export class SearchService {
       return response[1];
     }
     return Array.isArray(response) ? (response as string[]) : [];
+  }
+
+  private getEffectiveLanguage(): string | undefined {
+    if (!this.searchModel().useLocale) return undefined;
+    const country = this.geolocationService.country();
+
+    if (country) return COUNTRY_TO_LANG[country];
+
+    return navigator.language.split('-')[0] ?? navigator.language;
+  }
+
+  async refreshSearch(): Promise<void> {
+    const q = this.query().trim();
+    if (!q) return;
+
+    this.resetPagination();
+
+    await this.withLoading(async () => {
+      const resp = await this.loadPage(1);
+      this.applyFirstPage(resp);
+    });
   }
 }

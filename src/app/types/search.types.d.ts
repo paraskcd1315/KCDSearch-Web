@@ -1,4 +1,9 @@
-import { SearchCategory } from '../enums/search.enums';
+import { SafeSearch, SearchCategory } from '../enums/search.enums';
+
+export interface SearchAttributes {
+  useLocale: boolean;
+  safeSearch: SafeSearch;
+}
 
 export interface SearXNGResult {
   url: string;
