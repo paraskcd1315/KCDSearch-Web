@@ -6,6 +6,9 @@ services:
     container_name: kcdsearch
     restart: unless-stopped
     env_file: .env
+    environment:
+      - FOURSQUARE_API_KEY=${FOURSQUARE_API_KEY}
+      - FOURSQUARE_API_VERSION=${FOURSQUARE_API_VERSION:-2025-06-17}
     networks:
       - proxy-net
 

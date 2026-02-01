@@ -15,15 +15,14 @@ export class FoursquareService {
   private readonly http = inject(HttpClient);
 
   async search(query: string): Promise<FoursquarePlaceResult[]> {
-    const key = this.appConfig.config.foursquareApiKey;
-    if (!key) return [];
-
+    const key = this.appConfig.config.foursquareApiKey ?? '';
+    const version = this.appConfig.config.foursquareApiVersion ?? '';
     const { lat, lon } = await this.geolocation.getCurrentCoords();
     const cacheKey = this.cacheKey(lat, lon, query);
     const cached = await this.cache.getFoursquare(cacheKey);
     if (Array.isArray(cached)) return cached as FoursquarePlaceResult[];
 
-    const results = await this.fetchPlaces(key, query, lat, lon);
+    const results = await this.fetchPlaces(version, key, query, lat, lon);
     await this.cache.setFoursquare(cacheKey, results);
     return results;
   }
@@ -33,19 +32,23 @@ export class FoursquareService {
   }
 
   private async fetchPlaces(
+    version: string,
     key: string,
     query: string,
     lat: number,
     lon: number,
   ): Promise<FoursquarePlaceResult[]> {
+    const headers: Record<string, string> = {
+      accept: 'application/json',
+    };
+
+    if (key) headers['Authorization'] = `Bearer ${key}`;
+    if (version) headers['X-Places-Api-Version'] = version;
+
     const res = await firstValueFrom(
       this.http.get<FoursquareSearchResponse>(FOURSQUARE_API_URL_SEARCH, {
         params: { query: query.trim(), limit: '12', ll: `${lat},${lon}` },
-        headers: {
-          Authorization: `Bearer ${key}`,
-          'X-Places-Api-Version': '2025-06-17',
-          accept: 'application/json',
-        },
+        headers,
       }),
     );
     return res.results ?? [];

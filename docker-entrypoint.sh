@@ -1,8 +1,11 @@
 #!/bin/sh
-CONFIG_JSON="/usr/share/nginx/html/config.json"
-if [ -n "$FOURSQUARE_API_KEY" ]; then
-  echo "{\"foursquareApiKey\":\"$FOURSQUARE_API_KEY\"}" > "$CONFIG_JSON"
-else
-  echo "{\"foursquareApiKey\":\"\"}" > "$CONFIG_JSON"
-fi
+set -e
+
+export FOURSQUARE_API_KEY="${FOURSQUARE_API_KEY:-}"
+export FOURSQUARE_API_VERSION="${FOURSQUARE_API_VERSION:-2025-06-17}"
+
+envsubst '${FOURSQUARE_API_KEY} ${FOURSQUARE_API_VERSION}' \
+  < /etc/nginx/conf.d/default.conf.template \
+  > /etc/nginx/conf.d/default.conf
+
 exec nginx -g "daemon off;"
