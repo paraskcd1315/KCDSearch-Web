@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { MapPoi } from '../../types/map.types';
 import { FoursquareService } from './foursquare.service';
 import { foursquarePlaceToMapPoi } from '../../utils/map.utils';
+import { runWithLoading } from '../../utils/async.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -19,21 +20,20 @@ export class MapSearchService {
     this.clearState();
     if (!q) return;
 
-    this.isLoading.set(true);
-    try {
-      const results = await this.foursquare.search(q);
-      if (results.length === 0) {
-        this.error.set('No location found');
-        return;
+    await runWithLoading(this.isLoading.set.bind(this.isLoading), async () => {
+      try {
+        const results = await this.foursquare.search(q);
+        if (results.length === 0) {
+          this.error.set('No location found');
+          return;
+        }
+        const first = results[0];
+        this.center.set({ lat: first.latitude, lon: first.longitude });
+        this.pois.set(results.map(foursquarePlaceToMapPoi));
+      } catch {
+        this.error.set('Search failed');
       }
-      const first = results[0];
-      this.center.set({ lat: first.latitude, lon: first.longitude });
-      this.pois.set(results.map(foursquarePlaceToMapPoi));
-    } catch {
-      this.error.set('Search failed');
-    } finally {
-      this.isLoading.set(false);
-    }
+    });
   }
 
   private clearState(): void {

@@ -1,6 +1,6 @@
 import { SafeSearch } from '../enums/search.enums';
 import { SelectOption } from '../types/config.types';
-import { SearXNGResponse } from '../types/search.types';
+import { SearchAttributes, SearXNGResponse } from '../types/search.types';
 
 export const DB_SEARCH_NAME = 'kcdsearch-search-cache';
 export const DB_SEARCH_VERSION = 1;
@@ -75,3 +75,18 @@ export const SAFE_SEARCH_SELECT_OPTIONS: SelectOption[] = [
   { label: 'Moderate', value: SafeSearch.Moderate },
   { label: 'Strict', value: SafeSearch.Strict },
 ];
+
+export const DEFAULT_POSITION_OPTIONS: PositionOptions = {
+  enableHighAccuracy: true,
+  timeout: 10000,
+  maximumAge: 60000,
+};
+
+export const REVERSE_GEOCODING_API_URL = 'https://nominatim.openstreetmap.org/reverse';
+
+export const DEFAULT_SEARCH_MODEL: SearchAttributes = {
+  useLocale: true,
+  safeSearch: SafeSearch.Off,
+};
+
+export const GEO_LOCATION_PRECISION = 4;

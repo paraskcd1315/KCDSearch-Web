@@ -21,3 +21,8 @@ export function foursquarePlaceToMapPoi(p: FoursquarePlaceResult): MapPoi {
     rating: p.rating ?? null,
   };
 }
+
+export function roundToGeoLocationPrecision(value: number, decimals: number): number {
+  const factor = 10 ** decimals;
+  return Math.round(value * factor) / factor;
+}

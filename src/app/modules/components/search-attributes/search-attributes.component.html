@@ -1,0 +1,15 @@
+<mat-slide-toggle class="w-40 -mt-4" [formField]="searchForm.useLocale" (change)="refreshSearch()"
+  >Local search</mat-slide-toggle
+>
+<mat-form-field class="select-field w-40">
+  <mat-label>Safe search</mat-label>
+  <mat-select
+    [formField]="searchForm.safeSearch"
+    panelClass="select-field-panel"
+    (selectionChange)="refreshSearch()"
+  >
+    @for (option of safeSearchSelectOptions; track option.value) {
+      <mat-option [value]="option.value">{{ option.label }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>

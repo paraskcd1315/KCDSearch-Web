@@ -1,12 +1,19 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { COUNTRY_TO_LANG } from '../../utils/constants.utils';
+import {
+  COUNTRY_TO_LANG,
+  DEFAULT_POSITION_OPTIONS,
+  REVERSE_GEOCODING_API_URL,
+} from '../../utils/constants.utils';
+import { LocationPermission } from '../../enums/geolocation.enums';
 
 @Injectable({ providedIn: 'root' })
 export class GeolocationService {
   private readonly http = inject(HttpClient);
+
   readonly country = signal<string | null>(null);
+  readonly locationPermission = signal<LocationPermission>(LocationPermission.Prompt);
 
   constructor() {
     this.init();
@@ -19,9 +26,7 @@ export class GeolocationService {
         return;
       }
       navigator.geolocation.getCurrentPosition(resolve, reject, {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 60000,
+        ...DEFAULT_POSITION_OPTIONS,
         ...options,
       });
     });
@@ -34,28 +39,55 @@ export class GeolocationService {
     }));
   }
 
-  async init(): Promise<void> {
-    if (localStorage.getItem('country')) {
-      this.country.set(localStorage.getItem('country') as string);
-      return;
-    }
-    const { lat, lon } = await this.getCurrentCoords();
-    const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+  async requestLocation(): Promise<void> {
     try {
-      const res = await firstValueFrom(
-        this.http.get<{ address?: { country_code?: string } }>(url, {
-          headers: { 'Accept-Language': 'en' },
-        }),
-      );
-      const cc = res?.address?.country_code?.toUpperCase();
+      const { lat, lon } = await this.getCurrentCoords();
+      const cc = await this.reverseGeocode(lat, lon);
 
       if (cc) {
-        this.country.set(COUNTRY_TO_LANG[cc]);
+        this.country.set(cc);
         localStorage.setItem('country', cc);
       }
+      this.locationPermission.set(LocationPermission.Granted);
     } catch {
-      this.country.set(null);
-      localStorage.removeItem('country');
+      this.locationPermission.set(LocationPermission.Denied);
     }
+  }
+
+  private async init(): Promise<void> {
+    const stored = localStorage.getItem('country');
+    if (stored) {
+      this.country.set(stored);
+      return;
+    }
+    try {
+      const perm = await navigator.permissions?.query({ name: 'geolocation' });
+      if (perm?.state === 'granted') {
+        const { lat, lon } = await this.getCurrentCoords();
+        const cc = await this.reverseGeocode(lat, lon);
+        if (cc) {
+          this.country.set(cc);
+          localStorage.setItem('country', cc);
+        }
+        this.locationPermission.set(LocationPermission.Granted);
+      } else if (perm?.state === LocationPermission.Denied) {
+        this.locationPermission.set(LocationPermission.Denied);
+      }
+    } catch {
+      this.locationPermission.set(LocationPermission.Prompt);
+    }
+  }
+
+  private async reverseGeocode(lat: number, lon: number): Promise<string | null> {
+    const params = new HttpParams().set('lat', lat).set('lon', lon).set('format', 'json');
+    const url = `${REVERSE_GEOCODING_API_URL}?${params.toString()}`;
+    const res = await firstValueFrom(
+      this.http.get<{ address?: { country_code?: string } }>(url, {
+        headers: { 'Accept-Language': 'en' },
+      }),
+    );
+    const cc = res?.address?.country_code?.toUpperCase();
+
+    return cc && COUNTRY_TO_LANG[cc] ? cc : null;
   }
 }

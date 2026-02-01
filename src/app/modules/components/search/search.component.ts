@@ -13,14 +13,11 @@ import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {
-  MatAutocomplete,
-  MatAutocompleteModule,
-  MatAutocompleteTrigger,
-} from '@angular/material/autocomplete';
+import { MatAutocompleteModule, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
+import { runWithLoading } from '../../../utils/async.utils';
 
 @Component({
   selector: 'app-search',
@@ -65,6 +62,7 @@ export class SearchComponent {
     this.searchControl.valueChanges
       .pipe(
         tap((value) => {
+          this.valueChange.emit(value ?? '');
           if (!value || value.trim().length < 2) {
             this.suggestions.set([]);
             this.isAutocompleteOpen.set(false);
@@ -75,20 +73,17 @@ export class SearchComponent {
         filter((value) => value !== null && value.trim().length >= 2),
         switchMap(async (value) => {
           this.searchService.query.set(value ?? '');
-          this.isLoadingAutocomplete.set(true);
-          const results = await this.searchService.autocomplete(value ?? '');
-          this.isLoadingAutocomplete.set(false);
-          return results;
+          return runWithLoading(
+            this.isLoadingAutocomplete.set.bind(this.isLoadingAutocomplete),
+            () => this.searchService.autocomplete(value ?? ''),
+          );
         }),
       )
       .subscribe((results) => {
         this.suggestions.set(results);
-        this.isAutocompleteOpen.set(results.length > 0);
+        const panelStillOpen = this.autocompleteTrigger()?.panelOpen === true;
+        this.isAutocompleteOpen.set(panelStillOpen && results.length > 0);
       });
-
-    this.searchControl.valueChanges.subscribe((value) => {
-      this.valueChange.emit(value ?? '');
-    });
   }
 
   clearSearch(): void {
@@ -100,22 +95,12 @@ export class SearchComponent {
   }
 
   onSuggestionClick(suggestion: string): void {
-    this.searchControl.setValue(suggestion, { emitEvent: false });
-    this.onSearch();
+    this.submitWithValue(suggestion);
   }
 
   onSearch(): void {
     const query = this.searchControl.value?.trim();
-    if (query) {
-      this.autocompleteTrigger()?.closePanel();
-      this.isAutocompleteOpen.set(false);
-      this.search.emit(query);
-    }
-  }
-
-  onOptionSelected(value: string): void {
-    this.searchControl.setValue(value, { emitEvent: false });
-    this.onSearch();
+    if (query) this.closePanelAndEmitSearch(query);
   }
 
   onAutocompleteOpened(): void {
@@ -128,5 +113,17 @@ export class SearchComponent {
 
   displayFn(value: string): string {
     return value ?? '';
+  }
+
+  private submitWithValue(value: string): void {
+    this.searchControl.setValue(value, { emitEvent: false });
+    const query = value?.trim();
+    if (query) this.closePanelAndEmitSearch(query);
+  }
+
+  private closePanelAndEmitSearch(query: string): void {
+    this.autocompleteTrigger()?.closePanel();
+    this.isAutocompleteOpen.set(false);
+    this.search.emit(query);
   }
 }
