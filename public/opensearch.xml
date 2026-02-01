@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>KCD Search</ShortName>
+  <Description>Search with KCD Search</Description>
+  <Url type="text/html" method="get" template="https://search.paraskcd.com/search?q={searchTerms}"/>
+  <Url type="application/json" rel="suggestions" template="https://search.paraskcd.com/api/autocomplete?q={searchTerms}"/>
+</OpenSearchDescription>
