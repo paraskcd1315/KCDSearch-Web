@@ -8,11 +8,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SearchService } from '../../../../../services/search/search.service';
+import { SearchService } from '../../../../../services/search.service';
 import { SearchImageResultComponent } from '../../../../components/search-image-result/search-image-result.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SearXNGResult } from '../../../../../types/search.types';
-import { ImageDetailService } from '../../../../../services/image-detail/image-detail.service';
+import { ImageDetailService } from '../../../../../services/image-detail.service';
 
 const COLUMN_MIN_WIDTH = 200;
 const COLUMN_GAP = 20;

@@ -16,7 +16,7 @@
         <mat-icon svgIcon="heroicons_outline:x-mark"></mat-icon>
       </button>
     </div>
-    <div class="map-poi-detail-body p-4 text-sm">
+    <div class="map-poi-detail-body p-4 text-sm min-w-72">
       @if (p.imageUrl) {
         <div class="w-full overflow-hidden rounded-md">
           <img
@@ -33,6 +33,26 @@
       }
       @if (p.openingHours) {
         <p>Opening hours: {{ p.openingHours }}</p>
+      }
+      @if (p.website) {
+        <p>
+          Website:
+          <a
+            [href]="p.website"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="underline break-all"
+            >{{ p.website }}</a
+          >
+        </p>
+      }
+      @if (p.phone) {
+        <p>
+          Phone: <a [href]="'tel:' + p.phone" class="underline">{{ p.phone }}</a>
+        </p>
+      }
+      @if (p.rating != null) {
+        <p>Rating: {{ p.rating }}</p>
       }
     </div>
   </aside>

@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { SearXNGResult } from '../../types/search.types';
+import { SearXNGResult } from '../types/search.types';
 
 @Injectable({
   providedIn: 'root',

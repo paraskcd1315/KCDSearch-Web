@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { ImageDetailService } from '../../../services/image-detail/image-detail.service';
+import { ImageDetailService } from '../../../services/image-detail.service';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 

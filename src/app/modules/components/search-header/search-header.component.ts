@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, output } from '@angular/core';
 import { SearchComponent } from '../search/search.component';
 import { RouterLink } from '@angular/router';
-import { SearchService } from '../../../services/search/search.service';
+import { SearchService } from '../../../services/search.service';
 
 @Component({
   selector: 'app-search-header',

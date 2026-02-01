@@ -1,14 +1,14 @@
 import { CommonModule, NgComponentOutlet } from '@angular/common';
 import { Component, computed, inject, OnDestroy, OnInit, signal, Type } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { SearchService } from '../../../services/search/search.service';
+import { SearchService } from '../../../services/search.service';
 import { Subscription } from 'rxjs';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { searchTabs } from '../../../utils/search.utils';
 import { SearchCategory } from '../../../enums/search.enums';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ImageDetailService } from '../../../services/image-detail/image-detail.service';
+import { ImageDetailService } from '../../../services/image-detail.service';
 import { SearchImageResultDetailComponent } from '../../components/search-image-result-detail/search-image-result-detail.component';
 import { SearchHeaderComponent } from '../../components/search-header/search-header.component';
 import { MapSearchService } from '../../../services/map-search/map-search.service';

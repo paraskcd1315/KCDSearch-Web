@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, input, output, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -6,7 +6,7 @@ import { SearXNGResult } from '../../../types/search.types';
 
 @Component({
   selector: 'app-search-image-result',
-  imports: [CommonModule, MatCardModule, DatePipe, MatTooltipModule],
+  imports: [CommonModule, MatCardModule, MatTooltipModule],
   templateUrl: './search-image-result.component.html',
   styleUrl: './search-image-result.component.css',
 })

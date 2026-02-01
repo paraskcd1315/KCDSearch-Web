@@ -1,10 +1,23 @@
-import { Component, effect, inject, input, output, signal, viewChild, ViewEncapsulation } from '@angular/core';
-import { SearchService } from '../../../services/search/search.service';
+import {
+  Component,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import { SearchService } from '../../../services/search.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import {
+  MatAutocomplete,
+  MatAutocompleteModule,
+  MatAutocompleteTrigger,
+} from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
@@ -65,7 +78,7 @@ export class SearchComponent {
           const results = await this.searchService.autocomplete(value ?? '');
           this.isLoadingAutocomplete.set(false);
           return results;
-        })
+        }),
       )
       .subscribe((results) => {
         this.suggestions.set(results);

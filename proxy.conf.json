@@ -1,4 +1,11 @@
 {
+  "/api/places": {
+    "target": "https://places-api.foursquare.com/places/",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api/places": "" },
+    "logLevel": "debug"
+  },
   "/api/search": {
     "target": "http://host.docker.internal:8080",
     "secure": true,

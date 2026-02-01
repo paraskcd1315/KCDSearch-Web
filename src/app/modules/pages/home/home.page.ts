@@ -4,16 +4,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { SearchComponent } from '../../components/search/search.component';
-import { SearchService } from '../../../services/search/search.service';
+import { SearchService } from '../../../services/search.service';
 
 @Component({
   selector: 'app-home.page',
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatIconModule,
-    SearchComponent
-  ],
+  imports: [CommonModule, MatButtonModule, MatIconModule, SearchComponent],
   templateUrl: './home.page.html',
   styleUrl: './home.page.css',
 })

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MapPoiDetailService } from '../../../services/map-poi-detail/map-poi-detail.service';
+import { MapPoiDetailService } from '../../../services/map-search/map-poi-detail.service';
 
 @Component({
   selector: 'app-map-detail',

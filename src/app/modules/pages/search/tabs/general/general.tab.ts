@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { SearchService } from '../../../../../services/search/search.service';
+import { SearchService } from '../../../../../services/search.service';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SearchResultComponent } from '../../../../components/search-result/search-result.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';

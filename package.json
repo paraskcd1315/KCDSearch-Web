@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "npm run config && ng serve",
+    "start:ng": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "config": "node scripts/generate-config.cjs"
   },
   "prettier": {
     "printWidth": 100,
@@ -42,6 +44,7 @@
     "@angular/material": "^21.1.1",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/leaflet": "^1.9.21",
+    "dotenv": "^17.2.3",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.3",
     "prettier": "^3.8.1",
