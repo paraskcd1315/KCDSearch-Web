@@ -1,0 +1,26 @@
+@if (shouldRun()) {
+  @if (loading() && message().length === 0 && sources().length === 0) {
+    <div class="flex flex-col gap-2 py-2 max-h-48">
+      <div class="h-3 w-full rounded bg-gray-200 animate-pulse"></div>
+      <div class="h-3 w-4/5 rounded bg-gray-200 animate-pulse"></div>
+      <div class="h-3 w-3/4 rounded bg-gray-200 animate-pulse"></div>
+      <div class="h-3 w-1/2 rounded bg-gray-200 animate-pulse"></div>
+    </div>
+  } @else if (message().length > 0 || sources().length > 0) {
+    @if (lastSources().length > 0) {
+      <app-search-ai-sources />
+    }
+    <mat-accordion>
+      <mat-expansion-panel [expanded]="true" class="result-card">
+        <mat-expansion-panel-header class="!py-2">
+          <mat-panel-title class="text-sm font-medium">AI summary</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="max-h-72 overflow-y-auto pr-2 text-sm text-gray-700">
+          @if (message().length > 0) {
+            <div class="markdown-body" [innerHTML]="message() | markdown"></div>
+          }
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  }
+}

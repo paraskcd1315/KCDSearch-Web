@@ -5,10 +5,12 @@ import { Infobox, SearchAttributes, SearXNGResponse, SearXNGResult } from '../ty
 import { SafeSearch, SearchCategory } from '../enums/search.enums';
 import { SearchCacheService } from './cache/search-cache.service';
 import {
+  AUTOCOMPLETE_API_URL,
   COUNTRY_TO_LANG,
   DEFAULT_SEARCH_MODEL,
   EMPTY_SEARCH_RESPONSE,
   SAFE_SEARCH_TO_SEARXNG,
+  SEARCH_API_URL,
 } from '../utils/constants.utils';
 import { form } from '@angular/forms/signals';
 import { GeolocationService } from './map-search/geolocation.service';
@@ -22,8 +24,6 @@ export class SearchService {
   private readonly http = inject(HttpClient);
   private readonly searchCache = inject(SearchCacheService);
   private readonly geolocationService = inject(GeolocationService);
-  private readonly searxngUrl = '/api/search';
-  private readonly autocompleteUrl = '/api/autocomplete';
 
   readonly query = signal<string>('');
   readonly category = signal<SearchCategory>(SearchCategory.General);
@@ -95,7 +95,7 @@ export class SearchService {
     }
     try {
       const response = await firstValueFrom(
-        this.http.get<[string, string[]] | string[]>(this.autocompleteUrl, {
+        this.http.get<[string, string[]] | string[]>(AUTOCOMPLETE_API_URL, {
           params: new HttpParams().set('q', q),
         }),
       );
@@ -185,7 +185,7 @@ export class SearchService {
       return cached;
     }
     const response = await firstValueFrom(
-      this.http.get<SearXNGResponse>(this.searxngUrl, { params: this.params(page) }),
+      this.http.get<SearXNGResponse>(SEARCH_API_URL, { params: this.params(page) }),
     );
     await this.searchCache.set(cacheKey, response);
     this.totalResults.set(response.number_of_results ?? 0);

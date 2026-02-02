@@ -1,0 +1,9 @@
+:host {
+  display: block;
+}
+
+.result-card {
+  background-color: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface);
+  border: 1px solid var(--mat-sys-surface-variant);
+}

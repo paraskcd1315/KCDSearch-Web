@@ -43,6 +43,9 @@
                   hidden: results().length === 0 || isMapTab(),
                 }"
               />
+              @if (isGeneralTab()) {
+                <app-search-ai-preview />
+              }
               <ng-container *ngComponentOutlet="currentTabComponent()"></ng-container>
             </div>
           } @else if (!isLoading()) {

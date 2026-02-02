@@ -90,3 +90,11 @@ export const DEFAULT_SEARCH_MODEL: SearchAttributes = {
 };
 
 export const GEO_LOCATION_PRECISION = 4;
+
+export const AI_API_URL = '/api/ai';
+export const AUTOCOMPLETE_API_URL = '/api/autocomplete';
+export const SEARCH_API_URL = '/api/search';
+
+export const MIN_AI_QUERY_WORDS = 5;
+
+export const INITIAL_SOURCES = 3;

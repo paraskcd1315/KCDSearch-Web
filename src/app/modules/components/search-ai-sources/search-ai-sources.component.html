@@ -1,0 +1,52 @@
+<mat-card appearance="outlined" class="result-card w-full mb-4">
+  <mat-card-header>
+    <mat-card-title class="text-base font-medium pb-4">AI SummarySources</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      @for (src of initialSources(); track src.metadata.url) {
+        <a
+          [href]="src.metadata.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex flex-col gap-1 p-3 rounded-lg result-card text-left"
+        >
+          <span class="text-sm font-medium line-clamp-2">{{
+            src.metadata.title || src.metadata.url
+          }}</span>
+          @if (src.content) {
+            <span class="text-xs line-clamp-2">{{ src.content }}</span>
+          }
+        </a>
+      }
+    </div>
+    @if (hasMore()) {
+      <mat-accordion class="block mt-3">
+        <mat-expansion-panel class="result-card">
+          <mat-expansion-panel-header class="!py-2">
+            <mat-panel-title class="text-sm font-medium">
+              Show more sources ({{ moreCount() }})
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
+            @for (src of moreSources(); track src.metadata.url) {
+              <a
+                [href]="src.metadata.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex flex-col gap-1 p-3 rounded-lg result-card text-left"
+              >
+                <span class="text-sm font-medium line-clamp-2">{{
+                  src.metadata.title || src.metadata.url
+                }}</span>
+                @if (src.content) {
+                  <span class="text-xs line-clamp-2">{{ src.content }}</span>
+                }
+              </a>
+            }
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    }
+  </mat-card-content>
+</mat-card>

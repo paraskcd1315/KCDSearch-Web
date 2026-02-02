@@ -23,6 +23,7 @@ import { SearchHeaderComponent } from '../../components/search-header/search-hea
 import { MapSearchService } from '../../../services/map-search/map-search.service';
 import { SearchAttributesComponent } from '../../components/search-attributes/search-attributes.component';
 import { runWithLoading } from '../../../utils/async.utils';
+import { SearchAiPreviewComponent } from '../../components/search-ai-preview/search-ai-preview.component';
 
 @Component({
   selector: 'app-search.page',
@@ -36,6 +37,7 @@ import { runWithLoading } from '../../../utils/async.utils';
     SearchHeaderComponent,
     NgComponentOutlet,
     SearchAttributesComponent,
+    SearchAiPreviewComponent,
   ],
   templateUrl: './search.page.html',
   styleUrl: './search.page.scss',
@@ -66,6 +68,7 @@ export class SearchPage implements OnInit, OnDestroy {
   selectedImageResult = computed(() => this.imageDetailService.selectedResult());
   isImageTab = computed(() => this.tabs[this.activeTab()].value === SearchCategory.Images);
   isMapTab = computed(() => this.tabs[this.activeTab()].value === SearchCategory.Map);
+  isGeneralTab = computed(() => this.tabs[this.activeTab()].value === SearchCategory.General);
 
   ngOnInit(): void {
     this.subscription.add(
